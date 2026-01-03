@@ -1,4 +1,4 @@
-from services.login_service import login
+from services.login.login_post_service import login
 
 def test_login_success():
     response = login()
