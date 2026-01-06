@@ -1,6 +1,5 @@
 from services.usuarios.usuarios_get_service import get_usuarios
 
-
 def test_get_usuarios_success():
     response = get_usuarios()
     body = response.json()

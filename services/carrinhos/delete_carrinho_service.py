@@ -2,7 +2,6 @@ import requests
 from utils.config import BASE_URL
 from services.login.login_post_service import login
 
-
 def deletar_carrinho():
     token = login().json()["authorization"]
 

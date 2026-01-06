@@ -1,6 +1,5 @@
 from services.produtos.produtos_get_service import get_produtos
 
-
 def test_get_produtos_success():
     response = get_produtos()
     body = response.json()
