@@ -2,7 +2,7 @@ import requests
 import uuid
 from utils.config import BASE_URL, NOME, EMAIL, PASSWORD, ADMINISTRADOR
 
-def usuarios(nome=NOME, email=EMAIL, password=PASSWORD, administrador=ADMINISTRADOR):
+def post_usuario(nome=NOME, email=EMAIL, password=PASSWORD, administrador=ADMINISTRADOR):
 
     email_dinamico = f"usuario_{uuid.uuid4()}@qa.com"
 
