@@ -1,5 +1,4 @@
 import requests
-
 from utils.config import BASE_URL
 from services.login.login_post_service import login
 from services.produtos.produtos_post_service import produtos
