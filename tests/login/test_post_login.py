@@ -10,7 +10,6 @@ def test_login_success():
     assert "authorization" in body
     assert body["authorization"].startswith("Bearer ")
     
-
 def test_login_email_invalido():
     response = login(
         email="email_invalido@qa.com",
@@ -21,7 +20,6 @@ def test_login_email_invalido():
 
     assert response.status_code == 401
     assert body["message"] == "Email e/ou senha inválidos"
-
 
 def test_login_senha_invalida():
     response = login(

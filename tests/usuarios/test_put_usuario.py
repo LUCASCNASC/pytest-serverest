@@ -2,7 +2,6 @@ from services.usuarios.usuarios_post_service import post_usuario
 from services.usuarios.usuarios_put_service import put_usuario
 from utils.data_factory import gerar_usuario, gerar_usuario_atualizado
 
-
 def test_put_usuario_success():
     # 1 - Criar usuário
     usuario = gerar_usuario()
