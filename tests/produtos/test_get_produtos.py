@@ -8,3 +8,4 @@ def test_get_produtos_success():
     assert "quantidade" in body
     assert "produtos" in body
     assert isinstance(body["produtos"], list)
+    

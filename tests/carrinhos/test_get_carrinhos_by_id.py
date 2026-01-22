@@ -18,3 +18,4 @@ def test_get_carrinhos_by_id_success():
     assert len(body["produtos"]) > 0
 
     assert "idProduto" in body["produtos"][0]
+    
