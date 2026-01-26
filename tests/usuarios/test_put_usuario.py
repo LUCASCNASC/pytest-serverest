@@ -20,5 +20,4 @@ def test_put_usuario_success():
 
     # 3 - Validações
     assert put_response.status_code == 200
-    assert body["message"] == "Registro alterado com sucesso"
-    
+    assert body["message"] == "Registro alterado com sucesso"  

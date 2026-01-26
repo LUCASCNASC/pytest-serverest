@@ -7,5 +7,4 @@ def test_get_produtos_success():
     assert response.status_code == 200
     assert "quantidade" in body
     assert "produtos" in body
-    assert isinstance(body["produtos"], list)
-    
+    assert isinstance(body["produtos"], list)  

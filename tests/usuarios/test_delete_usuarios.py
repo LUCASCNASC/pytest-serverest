@@ -6,4 +6,3 @@ def test_delete_usuario_sucesso(usuario_temporario):
 
     assert response.status_code == 200
     assert body["message"] == "Registro excluído com sucesso"
-    

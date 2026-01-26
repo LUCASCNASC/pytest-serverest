@@ -31,4 +31,4 @@ def test_login_senha_invalida():
 
     assert response.status_code == 401
     assert body["message"] == "Email e/ou senha inválidos"
-    
+   

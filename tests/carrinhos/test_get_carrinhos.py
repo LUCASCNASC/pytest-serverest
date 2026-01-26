@@ -8,4 +8,3 @@ def test_get_carrinhos_success():
     assert "quantidade" in body
     assert "carrinhos" in body
     assert isinstance(body["carrinhos"], list)
-    

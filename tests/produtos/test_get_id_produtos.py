@@ -11,4 +11,3 @@ def test_get_produto_por_id_success():
     assert "preco" in body
     assert "descricao" in body
     assert "_id" in body
-    

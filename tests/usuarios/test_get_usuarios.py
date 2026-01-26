@@ -8,4 +8,3 @@ def test_get_usuarios_success():
     assert "quantidade" in body
     assert "usuarios" in body
     assert isinstance(body["usuarios"], list)
-    

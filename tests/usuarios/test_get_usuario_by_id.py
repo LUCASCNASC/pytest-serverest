@@ -17,4 +17,3 @@ def test_get_usuario_by_id_success():
     assert "nome" in body
     assert "email" in body
     assert "administrador" in body
-    

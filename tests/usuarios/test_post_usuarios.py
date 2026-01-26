@@ -7,4 +7,3 @@ def test_usuarios_post_sucess():
     assert response.status_code == 201
     assert body["message"] == "Cadastro realizado com sucesso"
     assert "_id" in body
-    
