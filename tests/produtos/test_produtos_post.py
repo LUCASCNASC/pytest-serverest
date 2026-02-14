@@ -17,7 +17,6 @@ class TestPostProdutos:
         }
         response = requests.post(self.url, headers=headers, json=payload)
         
-        # Validações baseadas no screenshot
         assert response.status_code == 201
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
@@ -47,7 +46,7 @@ class TestPostProdutos:
 
     def test_cadastrar_produto_usuario_comum_403(self):
         """Cenário 403: Rota exclusiva para administradores"""
-        # 1. Criar e logar com um usuário comum (administrador: false)
+        # Criar e logar com um usuário comum (administrador: false)
         email_comum = fake.email()
         requests.post("https://serverest.dev/usuarios", json={
             "nome": "User Comum", "email": email_comum, "password": "123", "administrador": "false"
@@ -56,7 +55,7 @@ class TestPostProdutos:
                                   json={"email": email_comum, "password": "123"})
         token_comum = login_res.json()["authorization"]
         
-        # 2. Tentar cadastrar produto com token sem permissão
+        # Tentar cadastrar produto com token sem permissão
         headers = {'Authorization': token_comum}
         response = requests.post(self.url, headers=headers, json={})
         

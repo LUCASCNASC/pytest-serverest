@@ -8,7 +8,7 @@ class TestPutUsuarios:
 
     def test_put_alterar_usuario_com_sucesso_200(self):
         """Cenário 200: Registro alterado com sucesso"""
-        # 1. Cria um usuário para garantir que o ID existe
+        # Cria um usuário para garantir que o ID existe
         payload_create = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -17,7 +17,7 @@ class TestPutUsuarios:
         }
         user_id = requests.post(self.url_base, json=payload_create).json()["_id"]
 
-        # 2. Dados para alteração
+        # Dados para alteração
         payload_update = {
             "nome": "Lucas Editado",
             "email": fake.email(),
@@ -50,19 +50,19 @@ class TestPutUsuarios:
 
     def test_put_email_duplicado_400(self):
         """Cenário 400: Este email já está sendo usado"""
-        # 1. Garante um usuário 'A' no sistema
+        # Garante um usuário 'A' no sistema
         email_em_uso = fake.email()
         requests.post(self.url_base, json={
             "nome": "Usuario A", "email": email_em_uso, "password": "123", "administrador": "true"
         })
 
-        # 2. Garante um usuário 'B' que tentaremos editar
+        # Garante um usuário 'B' que tentaremos editar
         res_b = requests.post(self.url_base, json={
             "nome": "Usuario B", "email": fake.email(), "password": "123", "administrador": "true"
         })
         id_b = res_b.json()["_id"]
 
-        # 3. Tenta dar um PUT no usuário 'B' usando o email do usuário 'A'
+        # Tenta dar um PUT no usuário 'B' usando o email do usuário 'A'
         payload_conflito = {
             "nome": "Lucas Conflito",
             "email": email_em_uso,

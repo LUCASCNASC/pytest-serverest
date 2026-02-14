@@ -8,7 +8,7 @@ class TestGetUsuariosPorId:
 
     def test_buscar_usuario_por_id_com_sucesso_200(self):
         """Valida a busca de um usuário por um ID válido (Status 200)"""
-        # 1. Primeiro, cadastramos um usuário para garantir que o ID existe
+        # Primeiro, cadastramos um usuário para garantir que o ID existe
         payload_cadastro = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -18,10 +18,9 @@ class TestGetUsuariosPorId:
         cadastro_res = requests.post(self.url_base, json=payload_cadastro)
         user_id = cadastro_res.json()["_id"]
 
-        # 2. Agora, buscamos esse ID específico
+        # Agora, buscamos esse ID específico
         response = requests.get(f"{self.url_base}/{user_id}")
         
-        # Validações conforme a documentação
         assert response.status_code == 200
         assert response.json()["nome"] == payload_cadastro["nome"]
         assert response.json()["_id"] == user_id

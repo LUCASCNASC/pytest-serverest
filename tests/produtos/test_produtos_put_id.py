@@ -40,13 +40,13 @@ class TestPutProdutos:
         """Cenário 400: Já existe produto com esse nome"""
         headers = {'Authorization': auth_token}
         
-        # 1. Criamos um segundo produto 'B' para tentar roubar o nome dele
+        # Criamos um segundo produto 'B' para tentar roubar o nome dele
         nome_em_uso = f"Nome Ocupado {fake.random_number()}"
         requests.post(self.url_base, headers=headers, json={
             "nome": nome_em_uso, "preco": 10, "descricao": "D", "quantidade": 1
         })
 
-        # 2. Tentamos editar o produto 'A' (produto_id) usando o nome do produto 'B'
+        # Tentamos editar o produto 'A' (produto_id) usando o nome do produto 'B'
         payload_conflito = {
             "nome": nome_em_uso,
             "preco": 50,

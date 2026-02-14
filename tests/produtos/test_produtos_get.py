@@ -8,16 +8,12 @@ class TestGetProdutos:
         # Execução da requisição GET
         response = requests.get(self.url)
 
-        # Validações baseadas no screenshot da documentação
         assert response.status_code == 200
         
         response_data = response.json()
         
-        # Valida se as chaves principais existem no retorno
         assert "quantidade" in response_data
         assert "produtos" in response_data
-        
-        # Valida se 'produtos' é de fato uma lista
         assert isinstance(response_data["produtos"], list)
 
         # Se houver produtos na lista, valida a estrutura do primeiro item

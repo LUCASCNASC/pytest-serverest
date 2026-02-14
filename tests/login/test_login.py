@@ -11,7 +11,6 @@ class TestLogin:
         }
         response = requests.post(self.url, json=payload)
         
-        # Validações baseadas no screenshot
         assert response.status_code == 200
         assert response.json()["message"] == "Login realizado com sucesso"
         assert "authorization" in response.json()
@@ -24,6 +23,5 @@ class TestLogin:
         }
         response = requests.post(self.url, json=payload)
         
-        # Validações baseadas no screenshot
         assert response.status_code == 401
         assert response.json()["message"] == "Email e/ou senha inválidos"

@@ -17,7 +17,6 @@ class TestPostUsuarios:
         
         response = requests.post(self.url, json=payload)
         
-        # Validações conforme o print da documentação
         assert response.status_code == 201
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
@@ -39,6 +38,5 @@ class TestPostUsuarios:
         # Segunda tentativa
         response = requests.post(self.url, json=payload)
         
-        # Validações conforme o print da documentação
         assert response.status_code == 400
         assert response.json()["message"] == "Este email já está sendo usado"

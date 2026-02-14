@@ -8,7 +8,7 @@ class TestDeleteProdutos:
 
     def test_excluir_produto_com_sucesso_200(self, auth_token):
         """Cenário 200: Registro excluído com sucesso"""
-        # 1. Preparação: Criar um produto para garantir um ID válido
+        # Preparação: Criar um produto para garantir um ID válido
         headers = {'Authorization': auth_token}
         payload = {
             "nome": f"Produto para Deletar {fake.random_number()}",
@@ -19,10 +19,9 @@ class TestDeleteProdutos:
         res_post = requests.post(self.url_base, headers=headers, json=payload)
         produto_id = res_post.json()["_id"]
 
-        # 2. Execução: Excluir o produto
+        # Execução: Excluir o produto
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers)
 
-        # 3. Validação
         assert response.status_code == 200
         assert response.json()["message"] == "Registro excluído com sucesso"
 
@@ -30,17 +29,16 @@ class TestDeleteProdutos:
         """Cenário 400: Não é permitido excluir produto que faz parte de carrinho"""
         headers = {'Authorization': auth_token}
         
-        # 1. Preparação: Colocar o produto em um carrinho
+        # Preparação: Colocar o produto em um carrinho
         url_carrinhos = "https://serverest.dev/carrinhos"
         payload_carrinho = {
             "produtos": [{"idProduto": produto_id, "quantidade": 1}]
         }
         requests.post(url_carrinhos, headers=headers, json=payload_carrinho)
 
-        # 2. Execução: Tentar excluir o produto que está no carrinho
+        # Execução: Tentar excluir o produto que está no carrinho
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers)
 
-        # 3. Validação conforme regra de negócio
         assert response.status_code == 400
         assert response.json()["message"] == "Não é permitido excluir produto que faz parte de carrinho"
 

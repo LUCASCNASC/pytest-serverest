@@ -17,7 +17,6 @@ class TestUsuarios:
         
         response = requests.post(self.url, json=payload)
         
-        # Validações baseadas no seu print do POST
         assert response.status_code == 201
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
@@ -26,9 +25,7 @@ class TestUsuarios:
         """Valida GET /usuarios - Cenário de Sucesso (200)"""
         response = requests.get(self.url)
         
-        # Validações baseadas no seu print do GET
         assert response.status_code == 200
         assert "quantidade" in response.json()
         assert "usuarios" in response.json()
-        # Valida se a lista de usuários não está vazia ou é um tipo lista
         assert isinstance(response.json()["usuarios"], list)

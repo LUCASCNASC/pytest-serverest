@@ -5,17 +5,17 @@ class TestGetCarrinhosPorId:
 
     def test_buscar_carrinho_por_id_com_sucesso_200(self, auth_token, produto_id):
         """Cenário 200: Carrinho encontrado com sucesso"""
-        # 1. Preparação: Criar um carrinho para garantir que temos um ID válido
+        # Preparação: Criar um carrinho para garantir que temos um ID válido
         payload = {
             "produtos": [{"idProduto": produto_id, "quantidade": 1}]
         }
         res_post = requests.post(self.url_base, headers={'Authorization': auth_token}, json=payload)
         carrinho_id = res_post.json()["_id"]
 
-        # 2. Execução: Buscar o carrinho pelo ID gerado
+        # Execução: Buscar o carrinho pelo ID gerado
         response = requests.get(f"{self.url_base}/{carrinho_id}")
 
-        # 3. Validações conforme a documentação
+        # Validações conforme a documentação
         assert response.status_code == 200
         assert response.json()["_id"] == carrinho_id
         assert "produtos" in response.json()

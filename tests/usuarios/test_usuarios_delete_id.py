@@ -8,7 +8,7 @@ class TestDeleteUsuarios:
 
     def test_excluir_usuario_com_sucesso_200(self):
         """Cenário 200: Registro excluído com sucesso"""
-        # 1. Primeiro, cadastramos um usuário para garantir que temos um ID válido para deletar
+        # Primeiro, cadastramos um usuário para garantir que temos um ID válido para deletar
         payload = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -18,10 +18,9 @@ class TestDeleteUsuarios:
         res_post = requests.post(self.url_base, json=payload)
         user_id = res_post.json()["_id"]
 
-        # 2. Agora, executamos a exclusão
+        # Agora, executamos a exclusão
         response = requests.delete(f"{self.url_base}/{user_id}")
 
-        # Validações conforme o screenshot da documentação
         assert response.status_code == 200
         assert response.json()["message"] == "Registro excluído com sucesso"
 
@@ -35,7 +34,6 @@ class TestDeleteUsuarios:
         # Tentativa de exclusão de usuário que possui vínculo (ex: carrinho)
         response = requests.delete(f"{self.url_base}/{user_id_com_carrinho}")
 
-        # Validação da regra de negócio impeditiva
         assert response.status_code == 400
         assert response.json()["message"] == "Não é permitido excluir usuário com carrinho cadastrado"
 

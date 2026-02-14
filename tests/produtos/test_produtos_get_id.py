@@ -5,7 +5,7 @@ class TestGetProdutosPorId:
 
     def test_buscar_produto_por_id_com_sucesso_200(self, auth_token):
         """Cenário 200: Produto encontrado com sucesso"""
-        # 1. Preparação: Criar um produto para garantir que temos um ID válido para buscar
+        # Preparação: Criar um produto para garantir que temos um ID válido para buscar
         payload = {
             "nome": "Produto Teste Busca ID",
             "preco": 50,
@@ -16,10 +16,9 @@ class TestGetProdutosPorId:
         res_post = requests.post(self.url_base, headers=headers, json=payload)
         produto_id = res_post.json()["_id"]
 
-        # 2. Execução: Buscar o produto pelo ID gerado
+        # Execução: Buscar o produto pelo ID gerado
         response = requests.get(f"{self.url_base}/{produto_id}")
 
-        # 3. Validações baseadas no screenshot da documentação
         assert response.status_code == 200
         assert response.json()["nome"] == "Produto Teste Busca ID"
         assert "_id" in response.json()
@@ -32,6 +31,5 @@ class TestGetProdutosPorId:
 
         response = requests.get(f"{self.url_base}/{id_inexistente}")
 
-        # Validação da mensagem de erro conforme o screenshot
         assert response.status_code == 400
         assert response.json()["message"] == "Produto não encontrado"

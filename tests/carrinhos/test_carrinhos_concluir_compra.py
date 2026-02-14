@@ -19,12 +19,10 @@ class TestConcluirCompra:
         # Cria o carrinho antes de tentar concluir
         requests.post(self.url_carrinhos, headers=headers, json=payload)
 
-        # 2. Execução: Conclui a compra
+        # Execução: Conclui a compra
         response = requests.delete(self.url_concluir, headers=headers)
 
-        # 3. Validações baseadas no screenshot
         assert response.status_code == 200
-        # A API retorna a mesma mensagem para sucesso ou carrinho não encontrado
         assert response.json()["message"] in [
             "Registro excluído com sucesso", 
             "Não foi encontrado carrinho para esse usuário"
@@ -35,6 +33,5 @@ class TestConcluirCompra:
         # Execução sem o header de Authorization
         response = requests.delete(self.url_concluir)
 
-        # Validações baseadas no screenshot
         assert response.status_code == 401
         assert response.json()["message"] == "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
