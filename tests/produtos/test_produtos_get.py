@@ -3,7 +3,7 @@ import requests
 class TestGetProdutos:
     url = "https://serverest.dev/produtos"
 
-    def test_listar_produtos_com_sucesso_200(self):
+    def test_list_products_with_sucess_200(self):
         """Valida a listagem de produtos com sucesso (Status 200)"""
         # Execução da requisição GET
         response = requests.get(self.url)

@@ -6,7 +6,7 @@ fake = Faker()
 class TestDeleteProdutos:
     url_base = "https://serverest.dev/produtos"
 
-    def test_excluir_produto_com_sucesso_200(self, auth_token):
+    def test_delete_product_with_sucess_200(self, auth_token):
         """Cenário 200: Registro excluído com sucesso"""
         # Preparação: Criar um produto para garantir um ID válido
         headers = {'Authorization': auth_token}
@@ -25,7 +25,7 @@ class TestDeleteProdutos:
         assert response.status_code == 200
         assert response.json()["message"] == "Registro excluído com sucesso"
 
-    def test_excluir_produto_vinculado_a_carrinho_400(self, auth_token, produto_id):
+    def test_delete_product_linked_to_cart_400(self, auth_token, produto_id):
         """Cenário 400: Não é permitido excluir produto que faz parte de carrinho"""
         headers = {'Authorization': auth_token}
         
@@ -42,14 +42,14 @@ class TestDeleteProdutos:
         assert response.status_code == 400
         assert response.json()["message"] == "Não é permitido excluir produto que faz parte de carrinho"
 
-    def test_excluir_produto_sem_token_401(self):
+    def test_delete_product_without_token_401(self):
         """Cenário 401: Token ausente ou inválido"""
         response = requests.delete(f"{self.url_base}/id_qualquer")
         
         assert response.status_code == 401
         assert "Token de acesso ausente" in response.json()["message"]
 
-    def test_excluir_produto_sem_permissao_admin_403(self):
+    def test_delete_product_without_permission_admin_403(self):
         """Cenário 403: Rota exclusiva para administradores"""
         # Criar e logar com usuário comum (admin: false)
         email_comum = fake.email()

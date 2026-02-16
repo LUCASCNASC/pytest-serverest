@@ -6,7 +6,7 @@ fake = Faker()
 class TestPutProdutos:
     url_base = "https://serverest.dev/produtos"
 
-    def test_alterar_produto_sucesso_200(self, auth_token, produto_id):
+    def test_change_product_with_sucess_200(self, auth_token, produto_id):
         """Cenário 200: Registro alterado com sucesso"""
         headers = {'Authorization': auth_token}
         payload = {
@@ -20,7 +20,7 @@ class TestPutProdutos:
         assert response.status_code == 200
         assert response.json()["message"] == "Registro alterado com sucesso"
 
-    def test_cadastrar_produto_via_put_201(self, auth_token):
+    def test_register_product_via_put_201(self, auth_token):
         """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)"""
         headers = {'Authorization': auth_token}
         id_inexistente = f"novo_prod_{fake.random_number()}"
@@ -36,7 +36,7 @@ class TestPutProdutos:
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
 
-    def test_put_nome_duplicado_400(self, auth_token, produto_id):
+    def test_put_name_duplicate_400(self, auth_token, produto_id):
         """Cenário 400: Já existe produto com esse nome"""
         headers = {'Authorization': auth_token}
         
@@ -58,14 +58,14 @@ class TestPutProdutos:
         assert response.status_code == 400
         assert response.json()["message"] == "Já existe produto com esse nome"
 
-    def test_put_token_ausente_401(self):
+    def test_put_token_empty_401(self):
         """Cenário 401: Token ausente ou inválido"""
         response = requests.put(f"{self.url_base}/qualquer_id", json={})
         
         assert response.status_code == 401
         assert "Token de acesso ausente" in response.json()["message"]
 
-    def test_put_sem_permissao_admin_403(self):
+    def test_put_without_permission_admin_403(self):
         """Cenário 403: Rota exclusiva para administradores"""
         # Criar e logar com usuário comum (admin: false)
         email_comum = fake.email()

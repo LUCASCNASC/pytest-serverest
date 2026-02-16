@@ -3,7 +3,7 @@ import requests
 class TestPostCarrinhos:
     url = "https://serverest.dev/carrinhos"
 
-    def test_cadastrar_carrinho_sucesso_201(self, auth_token, produto_id):
+    def test_register_cart_sucess_201(self, auth_token, produto_id):
         """Cenário 201: Cadastro com sucesso"""
         headers = {'Authorization': auth_token}
         payload = {
@@ -20,7 +20,7 @@ class TestPostCarrinhos:
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
 
-    def test_cadastrar_carrinho_duplicado_400(self, auth_token, produto_id):
+    def test_register_cart_duplicate_400(self, auth_token, produto_id):
         """Cenário 400: Não é permitido ter mais de 1 carrinho por usuário"""
         headers = {'Authorization': auth_token}
         payload = {"produtos": [{"idProduto": produto_id, "quantidade": 1}]}
@@ -34,7 +34,7 @@ class TestPostCarrinhos:
         assert response.status_code == 400
         assert "Não é permitido ter mais de 1 carrinho" in response.json()["message"]
 
-    def test_cadastrar_carrinho_token_ausente_401(self):
+    def test_register_cart_token_absent_401(self):
         """Cenário 401: Token ausente, inválido ou expirado"""
         payload = {"produtos": [{"idProduto": "id_qualquer", "quantidade": 1}]}
         

@@ -6,7 +6,7 @@ fake = Faker()
 class TestUsuarios:
     url = "https://serverest.dev/usuarios"
 
-    def test_cadastrar_usuario_com_sucesso_201(self):
+    def test_register_user_with_success_201(self):
         """Valida POST /usuarios - Cenário de Sucesso (201)"""
         payload = {
             "nome": fake.name(),
@@ -21,7 +21,7 @@ class TestUsuarios:
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
 
-    def test_listar_usuarios_cadastrados_200(self):
+    def test_list_users_registered_200(self):
         """Valida GET /usuarios - Cenário de Sucesso (200)"""
         response = requests.get(self.url)
         

@@ -3,7 +3,7 @@ import requests
 class TestGetCarrinhosPorId:
     url_base = "https://serverest.dev/carrinhos"
 
-    def test_buscar_carrinho_por_id_com_sucesso_200(self, auth_token, produto_id):
+    def test_search_cart_by_id_with_sucess_200(self, auth_token, produto_id):
         """Cenário 200: Carrinho encontrado com sucesso"""
         # Preparação: Criar um carrinho para garantir que temos um ID válido
         payload = {
@@ -21,7 +21,7 @@ class TestGetCarrinhosPorId:
         assert "produtos" in response.json()
         assert "precoTotal" in response.json()
 
-    def test_buscar_carrinho_com_id_inexistente_400(self):
+    def test_search_cart_by_id_inexistent_400(self):
         """Cenário 400: Carrinho não encontrado"""
         # Usando um ID com formato válido, mas que não existe no banco
         id_inexistente = "nonExistent12345" 

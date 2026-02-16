@@ -6,7 +6,7 @@ fake = Faker()
 class TestPutUsuarios:
     url_base = "https://serverest.dev/usuarios"
 
-    def test_put_alterar_usuario_com_sucesso_200(self):
+    def test_put_change_user_with_success_200(self):
         """Cenário 200: Registro alterado com sucesso"""
         # Cria um usuário para garantir que o ID existe
         payload_create = {
@@ -30,7 +30,7 @@ class TestPutUsuarios:
         assert response.status_code == 200
         assert response.json()["message"] == "Registro alterado com sucesso"
 
-    def test_put_cadastrar_novo_usuario_201(self):
+    def test_put_register_new_user_201(self):
         """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)"""
         # Geramos um ID aleatório que não existe no sistema
         id_inexistente = f"novo_{fake.uuid4()[:8]}"
@@ -48,7 +48,7 @@ class TestPutUsuarios:
         assert response.json()["message"] == "Cadastro realizado com sucesso"
         assert "_id" in response.json()
 
-    def test_put_email_duplicado_400(self):
+    def test_put_email_duplicate_400(self):
         """Cenário 400: Este email já está sendo usado"""
         # Garante um usuário 'A' no sistema
         email_em_uso = fake.email()
