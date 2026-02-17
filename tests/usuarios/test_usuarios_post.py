@@ -1,10 +1,10 @@
-import requests
-from faker import Faker
+import requests;
+from faker import Faker;
 
-fake = Faker()
+fake = Faker();
 
 class TestPostUsuarios:
-    url = "https://serverest.dev/usuarios"
+    url = "https://serverest.dev/usuarios";
 
     def test_register_user_with_success_201(self):
         """Valida o cadastro de um novo usuário com sucesso (Status 201)"""
@@ -13,30 +13,30 @@ class TestPostUsuarios:
             "email": fake.email(),
             "password": "teste",
             "administrador": "true"
-        }
+        };
         
-        response = requests.post(self.url, json=payload)
+        response = requests.post(self.url, json=payload);
         
-        assert response.status_code == 201
-        assert response.json()["message"] == "Cadastro realizado com sucesso"
-        assert "_id" in response.json()
+        assert response.status_code == 201;
+        assert response.json()["message"] == "Cadastro realizado com sucesso";
+        assert "_id" in response.json();
 
     def test_register_user_email_duplicate_400(self):
-        """Valida a tentativa de cadastro com e-mail já existente (Status 400)"""
+        """Valida a tentativa de cadastro com e-mail já existente (Status 400)""";
         # Massa de teste com e-mail fixo
-        email_repetido = "beltrano@qa.com.br"
+        email_repetido = "beltrano@qa.com.br";
         payload = {
             "nome": "Fulano da silva",
             "email": email_repetido,
             "password": "teste",
             "administrador": "true"
-        }
+        };
         
         # Garante que o e-mail já existe no sistema antes de validar o erro
-        requests.post(self.url, json=payload)
+        requests.post(self.url, json=payload);
         
         # Segunda tentativa
-        response = requests.post(self.url, json=payload)
+        response = requests.post(self.url, json=payload);
         
-        assert response.status_code == 400
-        assert response.json()["message"] == "Este email já está sendo usado"
+        assert response.status_code == 400;
+        assert response.json()["message"] == "Este email já está sendo usado";
