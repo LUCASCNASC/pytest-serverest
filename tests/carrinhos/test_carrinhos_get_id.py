@@ -1,5 +1,7 @@
 import requests;
 
+# Endpoint: GET /carrinhos/{id}
+
 class TestGetCarrinhosPorId:
     url_base = "https://serverest.dev/carrinhos";
 

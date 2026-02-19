@@ -1,5 +1,7 @@
 import requests;
 
+# Endpoint: POST /carrinhos
+
 class TestPostCarrinhos:
     url = "https://serverest.dev/carrinhos";
 

@@ -1,5 +1,7 @@
 import requests;
 
+# Endpoint: GET /produtos/{id}
+
 class TestGetProdutosPorId:
     url_base = "https://serverest.dev/produtos";
 

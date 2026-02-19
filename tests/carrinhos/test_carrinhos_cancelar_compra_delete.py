@@ -1,5 +1,6 @@
 import requests;
 
+# Endpoint: DELETE /carrinhos/cancelar-compra
 class TestCancelarCompra:
     url_cancelar = "https://serverest.dev/carrinhos/cancelar-compra";
     url_carrinhos = "https://serverest.dev/carrinhos";

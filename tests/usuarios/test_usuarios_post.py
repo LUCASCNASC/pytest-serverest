@@ -1,6 +1,8 @@
 import requests;
 from faker import Faker;
 
+# Endpoint: POST /usuarios
+
 fake = Faker();
 
 class TestPostUsuarios:

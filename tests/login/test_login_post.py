@@ -1,5 +1,7 @@
 import requests;
 
+# Endpoint: POST /login
+
 class TestLogin:
     url = "https://serverest.dev/login";
 

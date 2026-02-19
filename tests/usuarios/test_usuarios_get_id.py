@@ -1,6 +1,8 @@
 import requests;
 from faker import Faker;
 
+# Endpoint: GET /usuarios/{id}
+
 fake = Faker();
 
 class TestGetUsuariosPorId:

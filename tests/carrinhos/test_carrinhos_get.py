@@ -1,5 +1,7 @@
 import requests;
 
+# Endpoint: GET /carrinhos
+
 class TestGetCarrinhos:
     url = "https://serverest.dev/carrinhos";
 

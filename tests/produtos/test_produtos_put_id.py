@@ -1,6 +1,8 @@
 import requests;
 from faker import Faker;
 
+# Endpoint: PUT /produtos/{id}
+
 fake = Faker();
 
 class TestPutProdutos:

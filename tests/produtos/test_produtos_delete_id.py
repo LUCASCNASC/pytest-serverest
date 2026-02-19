@@ -1,6 +1,8 @@
 import requests;
 from faker import Faker;
 
+# Endpoint: DELETE /produtos/{id}
+
 fake = Faker();
 
 class TestDeleteProdutos:
