@@ -5,10 +5,10 @@ from faker import Faker;
 
 fake = Faker();
 
-class TestDeleteUsuarios:
+class TestDeleteUserById:
     url_base = "https://serverest.dev/usuarios";
 
-    def test_delete_user_with_sucess_200(self):
+    def test_delete_user_with_sucess_200(self, base_url):
         """Cenário 200: Registro excluído com sucesso""";
         # Primeiro, cadastramos um usuário para garantir que temos um ID válido para deletar
         payload = {
@@ -26,7 +26,7 @@ class TestDeleteUsuarios:
         assert response.status_code == 200;
         assert response.json()["message"] == "Registro excluído com sucesso";
 
-    def test_delete_user_with_active_cart_400(self):
+    def test_delete_user_with_active_cart_400(self, base_url):
         """Cenário 400: Não é permitido excluir usuário com carrinho ativo""";
         # Nota: Para este teste falhar com 400, precisaríamos vincular um carrinho ao ID.
         # No ServeRest, o ID '0uxuPY0cbmQhpEz1' costuma ter dependências em ambientes de demonstração.
@@ -39,7 +39,7 @@ class TestDeleteUsuarios:
         assert response.status_code == 400;
         assert response.json()["message"] == "Não é permitido excluir usuário com carrinho cadastrado";
 
-    def test_delete_user_inexistent_200(self):
+    def test_delete_user_inexistent_200(self, base_url):
         """Cenário 200: Nenhum registro excluído (ID não encontrado)""";
         # O ServeRest retorna 200 mesmo se o ID não existir, informando que nada foi feito
         id_inexistente = "ID_QUE_NAO_EXISTE";

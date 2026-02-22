@@ -2,10 +2,10 @@ import requests;
 
 # Endpoint: GET /produtos/{id}
 
-class TestGetProdutosPorId:
+class TestSearchProductById:
     url_base = "https://serverest.dev/produtos";
 
-    def test_search_product_by_id_with_sucess_200(self, auth_token):
+    def test_search_product_by_id_with_sucess_200(self, base_url, auth_token):
         """Cenário 200: Produto encontrado com sucesso""";
         # Preparação: Criar um produto para garantir que temos um ID válido para buscar
         payload = {
@@ -26,7 +26,7 @@ class TestGetProdutosPorId:
         assert "_id" in response.json();
         assert response.json()["_id"] == produto_id;
 
-    def test_search_product_with_id_inexistent_400(self):
+    def test_search_product_with_id_inexistent_400(self, base_url):
         """Cenário 400: Produto não encontrado""";
         # Usando um ID que segue o padrão de formato mas não existe no banco
         id_inexistente = "nonExistent12345";

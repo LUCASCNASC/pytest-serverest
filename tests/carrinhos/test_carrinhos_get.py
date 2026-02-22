@@ -2,10 +2,10 @@ import requests;
 
 # Endpoint: GET /carrinhos
 
-class TestGetCarrinhos:
+class TestSearchCarts:
     url = "https://serverest.dev/carrinhos";
 
-    def test_list_cart_with_sucess_200(self, auth_token, produto_id):
+    def test_list_cart_with_sucess_200(self, base_url, auth_token, produto_id):
         """Valida a listagem de carrinhos cadastrados (Status 200)""";
         # Preparação: Garante que existe pelo menos um carrinho na lista
         payload = {

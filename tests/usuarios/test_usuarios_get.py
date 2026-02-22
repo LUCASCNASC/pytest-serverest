@@ -5,10 +5,10 @@ from faker import Faker;
 
 fake = Faker();
 
-class TestUsuarios:
+class TestSearchUsers:
     url = "https://serverest.dev/usuarios";
 
-    def test_register_user_with_success_201(self):
+    def test_register_user_with_success_201(self, base_url):
         """Valida POST /usuarios - Cenário de Sucesso (201)""";
         payload = {
             "nome": fake.name(),
@@ -23,7 +23,7 @@ class TestUsuarios:
         assert response.json()["message"] == "Cadastro realizado com sucesso";
         assert "_id" in response.json();
 
-    def test_list_users_registered_200(self):
+    def test_list_users_registered_200(self, base_url):
         """Valida GET /usuarios - Cenário de Sucesso (200)""";
         response = requests.get(self.url);
         

@@ -2,10 +2,10 @@ import requests;
 
 # Endpoint: GET /carrinhos/{id}
 
-class TestGetCarrinhosPorId:
+class TestSearchCartById:
     url_base = "https://serverest.dev/carrinhos";
 
-    def test_search_cart_by_id_with_sucess_200(self, auth_token, produto_id):
+    def test_search_cart_by_id_with_sucess_200(self, base_url, auth_token, produto_id):
         """Cenário 200: Carrinho encontrado com sucesso""";
         # Preparação: Criar um carrinho para garantir que temos um ID válido
         payload = {
@@ -23,7 +23,7 @@ class TestGetCarrinhosPorId:
         assert "produtos" in response.json();
         assert "precoTotal" in response.json();
 
-    def test_search_cart_by_id_inexistent_400(self):
+    def test_search_cart_by_id_inexistent_400(self, base_url):
         """Cenário 400: Carrinho não encontrado""";
         # Usando um ID com formato válido, mas que não existe no banco
         id_inexistente = "nonExistent12345" ;

@@ -5,10 +5,10 @@ from faker import Faker;
 
 fake = Faker();
 
-class TestPostUsuarios:
+class TestRegisterUser:
     url = "https://serverest.dev/usuarios";
 
-    def test_register_user_with_success_201(self):
+    def test_register_user_with_success_201(self, base_url):
         """Valida o cadastro de um novo usuário com sucesso (Status 201)"""
         payload = {
             "nome": fake.name(),
@@ -23,7 +23,7 @@ class TestPostUsuarios:
         assert response.json()["message"] == "Cadastro realizado com sucesso";
         assert "_id" in response.json();
 
-    def test_register_user_email_duplicate_400(self):
+    def test_register_user_email_duplicate_400(self, base_url):
         """Valida a tentativa de cadastro com e-mail já existente (Status 400)""";
         # Massa de teste com e-mail fixo
         email_repetido = "beltrano@qa.com.br";

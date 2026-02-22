@@ -5,10 +5,10 @@ from faker import Faker;
 
 fake = Faker();
 
-class TestGetUsuariosPorId:
+class TestSearchUserById:
     url_base = "https://serverest.dev/usuarios";
 
-    def test_search_user_by_id_with_success_200(self):
+    def test_search_user_by_id_with_success_200(self, base_url):
         """Valida a busca de um usuário por um ID válido (Status 200)""";
         # Primeiro, cadastramos um usuário para garantir que o ID existe
         payload_cadastro = {
@@ -28,7 +28,7 @@ class TestGetUsuariosPorId:
         assert response.json()["_id"] == user_id;
         assert "email" in response.json();
 
-    def test_search_user_by_id_inexistent_400(self):
+    def test_search_user_by_id_inexistent_400(self, base_url):
         """Valida a busca por um ID que não consta no sistema (Status 400)""";
         # Usando um ID com formato válido (16 caracteres), mas que não existe
         id_inexistente = "nonExistent12345";

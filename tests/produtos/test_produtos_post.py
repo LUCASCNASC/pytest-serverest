@@ -5,10 +5,10 @@ from faker import Faker;
 
 fake = Faker();
 
-class TestPostProdutos:
+class TestRegisterProduct:
     url = "https://serverest.dev/produtos";
 
-    def test_register_product_with_sucess_201(self, auth_token):
+    def test_register_product_with_sucess_201(self, base_url, auth_token):
         """Cenário 201: Cadastro com sucesso (Exige Token Admin)""";
         headers = {'Authorization': auth_token};
         payload = {
@@ -23,7 +23,7 @@ class TestPostProdutos:
         assert response.json()["message"] == "Cadastro realizado com sucesso";
         assert "_id" in response.json();
 
-    def test_register_product_name_duplicate_400(self, auth_token):
+    def test_register_product_name_duplicate_400(self, base_url, auth_token):
         """Cenário 400: Já existe produto com esse nome""";
         headers = {'Authorization': auth_token};
         nome_fixo = f"Produto Repetido {fake.random_number()}";
@@ -38,7 +38,7 @@ class TestPostProdutos:
         assert response.status_code == 400;
         assert response.json()["message"] == "Já existe produto com esse nome";
 
-    def test_register_product_without_token_401(self):
+    def test_register_product_without_token_401(self, base_url):
         """Cenário 401: Token ausente, inválido ou expirado""";
         # Requisição enviada sem o header Authorization
         response = requests.post(self.url, json={});
@@ -46,7 +46,7 @@ class TestPostProdutos:
         assert response.status_code == 401;
         assert "Token de acesso ausente" in response.json()["message"];
 
-    def test_register_product_without_permission_admin_403(self):
+    def test_register_product_without_permission_admin_403(self, base_url):
         """Cenário 403: Rota exclusiva para administradores""";
         # Criar e logar com um usuário comum (administrador: false)
         email_comum = fake.email();

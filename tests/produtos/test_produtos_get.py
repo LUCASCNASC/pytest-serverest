@@ -2,10 +2,10 @@ import requests;
 
 # Endpoint: GET /produtos
 
-class TestGetProdutos:
+class TestSearchProducts:
     url = "https://serverest.dev/produtos";
 
-    def test_list_products_with_sucess_200(self):
+    def test_list_products_with_sucess_200(self, base_url):
         """Valida a listagem de produtos com sucesso (Status 200)""";
         # Execução da requisição GET
         response = requests.get(self.url);

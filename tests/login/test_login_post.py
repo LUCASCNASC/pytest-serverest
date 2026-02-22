@@ -5,7 +5,7 @@ import requests;
 class TestLogin:
     url = "https://serverest.dev/login";
 
-    def test_login_with_sucess_200(self, usuario_global):
+    def test_login_with_sucess_200(self, base_url, usuario_global):
         """Valida login com credenciais válidas (Status 200)""";
         payload = {
             "email": usuario_global["email"],
@@ -17,7 +17,7 @@ class TestLogin:
         assert response.json()["message"] == "Login realizado com sucesso";
         assert "authorization" in response.json();
 
-    def test_login_email_password_invalids_401(self):
+    def test_login_email_password_invalids_401(self, base_url):
         """Valida erro ao logar com credenciais inexistentes (Status 401)""";
         payload = {
             "email": "email_inexistente_@qa.com",

@@ -1,11 +1,11 @@
 import requests;
 
 # Endpoint: DELETE /carrinhos/cancelar-compra
-class TestCancelarCompra:
+class TestCancelPurchase:
     url_cancelar = "https://serverest.dev/carrinhos/cancelar-compra";
     url_carrinhos = "https://serverest.dev/carrinhos";
 
-    def test_cancel_purchase_with_sucesso_200(self, auth_token, produto_id):
+    def test_cancel_purchase_with_sucesso_200(self, base_url, auth_token, produto_id):
         """Cenário 200: Registro excluído com sucesso (ou carrinho não encontrado)""";
         # Preparação: Garante que o usuário tenha um carrinho ativo para cancelar
         headers = {'Authorization': auth_token};
@@ -26,7 +26,7 @@ class TestCancelarCompra:
         assert response.status_code == 200;
         assert "sucesso" in response.json()["message"] or "Não foi encontrado" in response.json()["message"];
 
-    def test_cancel_purchase_without_token_401(self):
+    def test_cancel_purchase_without_token_401(self, base_url):
         """Cenário 401: Tentativa de cancelar compra sem autenticação""";
         # Execução sem o header de Authorization
         response = requests.delete(self.url_cancelar);
