@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: DELETE /usuarios/{id}
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestDeleteUserById:
-    url_base = "https://serverest.dev/usuarios";
+    url_base = f"{base_url}/usuarios";
 
     def test_delete_user_with_sucess_200(self, base_url):
         """Cenário 200: Registro excluído com sucesso""";

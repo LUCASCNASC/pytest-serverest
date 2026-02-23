@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: GET /usuarios/{id}
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestSearchUserById:
-    url_base = "https://serverest.dev/usuarios";
+    url_base = f"{base_url}/usuarios";
 
     def test_search_user_by_id_with_success_200(self, base_url):
         """Valida a busca de um usuário por um ID válido (Status 200)""";

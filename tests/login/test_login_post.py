@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: POST /login
 
 class TestLogin:
-    url = "https://serverest.dev/login";
+    url = f"{base_url}/login";
 
     def test_login_with_sucess_200(self, base_url, usuario_global):
         """Valida login com credenciais válidas (Status 200)""";

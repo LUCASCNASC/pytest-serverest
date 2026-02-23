@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: GET /carrinhos
 
 class TestSearchCarts:
-    url = "https://serverest.dev/carrinhos";
+    url = f"{base_url}/carrinhos";
 
     def test_list_cart_with_sucess_200(self, base_url, auth_token, produto_id):
         """Valida a listagem de carrinhos cadastrados (Status 200)""";

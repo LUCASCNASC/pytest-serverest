@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: PUT /produtos/{id}
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestUpdateProductById:
-    url_base = "https://serverest.dev/produtos";
+    url_base = f"{base_url}/produtos";
 
     def test_change_product_with_sucess_200(self, base_url, auth_token, produto_id):
         """Cenário 200: Registro alterado com sucesso""";

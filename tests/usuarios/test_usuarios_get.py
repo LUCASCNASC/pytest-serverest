@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: GET /usuarios
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestSearchUsers:
-    url = "https://serverest.dev/usuarios";
+    url = f"{base_url}/usuarios";
 
     def test_register_user_with_success_201(self, base_url):
         """Valida POST /usuarios - Cenário de Sucesso (201)""";

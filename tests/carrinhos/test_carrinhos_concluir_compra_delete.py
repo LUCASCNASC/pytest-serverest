@@ -1,10 +1,11 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: DELETE /carrinhos/concluir-compra
 
 class TestConcludePurchase:
-    url_concluir = "https://serverest.dev/carrinhos/concluir-compra";
-    url_carrinhos = "https://serverest.dev/carrinhos";
+    url_concluir = f"{base_url}/carrinhos/concluir-compra";
+    url_carrinhos = f"{base_url}/carrinhos";
 
     def test_conclude_purchase_with_sucess_200(self, base_url, auth_token, produto_id):
         """Valida a conclusão de compra com carrinho ativo (Status 200)""";

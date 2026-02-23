@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: DELETE /carrinhos/cancelar-compra
 class TestCancelPurchase:
-    url_cancelar = "https://serverest.dev/carrinhos/cancelar-compra";
-    url_carrinhos = "https://serverest.dev/carrinhos";
+    url_cancelar = f"{base_url}/cancelar-compra";
+    url_carrinhos = f"{base_url}/carrinhos";
 
     def test_cancel_purchase_with_sucesso_200(self, base_url, auth_token, produto_id):
         """Cenário 200: Registro excluído com sucesso (ou carrinho não encontrado)""";

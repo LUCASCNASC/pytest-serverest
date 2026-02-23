@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: POST /carrinhos
 
 class TestRegisterCart:
-    url = "https://serverest.dev/carrinhos";
+    url = f"{base_url}/carrinhos";
 
     def test_register_cart_sucess_201(self, base_url, auth_token, produto_id):
         """Cenário 201: Cadastro com sucesso""";

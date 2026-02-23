@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: PUT /usuarios/{id}
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestUpdateUserById:
-    url_base = "https://serverest.dev/usuarios";
+    url_base = f"{base_url}/usuarios";
 
     def test_put_change_user_with_success_200(self, base_url):
         """Cenário 200: Registro alterado com sucesso""";

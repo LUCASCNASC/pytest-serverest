@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: GET /produtos/{id}
 
 class TestSearchProductById:
-    url_base = "https://serverest.dev/produtos";
+    url_base = f"{base_url}/produtos";
 
     def test_search_product_by_id_with_sucess_200(self, base_url, auth_token):
         """Cenário 200: Produto encontrado com sucesso""";

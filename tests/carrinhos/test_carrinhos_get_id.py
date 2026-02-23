@@ -1,9 +1,10 @@
 import requests;
+from tests.conftest import base_url;
 
 # Endpoint: GET /carrinhos/{id}
 
 class TestSearchCartById:
-    url_base = "https://serverest.dev/carrinhos";
+    url_base = f"{base_url}/carrinhos";
 
     def test_search_cart_by_id_with_sucess_200(self, base_url, auth_token, produto_id):
         """Cenário 200: Carrinho encontrado com sucesso""";

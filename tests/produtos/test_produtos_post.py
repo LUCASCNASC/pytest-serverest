@@ -1,4 +1,5 @@
 import requests;
+from tests.conftest import base_url;
 from faker import Faker;
 
 # Endpoint: POST /produtos
@@ -6,7 +7,7 @@ from faker import Faker;
 fake = Faker();
 
 class TestRegisterProduct:
-    url = "https://serverest.dev/produtos";
+    url = f"{base_url}/produtos";
 
     def test_register_product_with_sucess_201(self, base_url, auth_token):
         """Cenário 201: Cadastro com sucesso (Exige Token Admin)""";
