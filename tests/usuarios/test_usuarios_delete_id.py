@@ -1,51 +1,49 @@
-import requests;
-from tests.conftest import base_url;
-from faker import Faker;
+import pytest
+import requests
+from faker import Faker
 
-# Endpoint: DELETE /usuarios/{id}
-
-fake = Faker();
+fake = Faker()
 
 class TestDeleteUserById:
-    url_base = f"{base_url}/usuarios";
+    
+    # Esta fixture resolve o problema da URL. Ela roda uma vez para a classe
+    # e injeta a string correta vinda do conftest.py
+    @pytest.fixture(autouse=True, scope="class")
+    def setup_class(self, base_url):
+        # Usamos o nome da classe para garantir que o valor seja atribuído corretamente
+        TestDeleteUserById.url_base = f"{base_url}/usuarios"
 
-    def test_delete_user_with_sucess_200(self, base_url):
-        """Cenário 200: Registro excluído com sucesso""";
-        # Primeiro, cadastramos um usuário para garantir que temos um ID válido para deletar
+    def test_delete_user_with_sucess_200(self):
+        """Cenário 200: Registro excluído com sucesso"""
         payload = {
             "nome": fake.name(),
             "email": fake.email(),
             "password": "teste",
             "administrador": "true"
-        };
-        res_post = requests.post(self.url_base, json=payload);
-        user_id = res_post.json()["_id"];
+        }
+        # Agora self.url_base será 'https://serverest.dev/usuarios'
+        res_post = requests.post(self.url_base, json=payload)
+        user_id = res_post.json()["_id"]
 
-        # Agora, executamos a exclusão
-        response = requests.delete(f"{self.url_base}/{user_id}");
+        response = requests.delete(f"{self.url_base}/{user_id}")
 
-        assert response.status_code == 200;
-        assert response.json()["message"] == "Registro excluído com sucesso";
+        assert response.status_code == 200
+        assert response.json()["message"] == "Registro excluído com sucesso"
 
-    def test_delete_user_with_active_cart_400(self, base_url):
-        """Cenário 400: Não é permitido excluir usuário com carrinho ativo""";
-        # Nota: Para este teste falhar com 400, precisaríamos vincular um carrinho ao ID.
-        # No ServeRest, o ID '0uxuPY0cbmQhpEz1' costuma ter dependências em ambientes de demonstração.
+    def test_delete_user_with_active_cart_400(self):
+        """Cenário 400: Não é permitido excluir usuário com carrinho ativo"""
+        user_id_com_carrinho = "0uxuPY0cbmQhpEz1"
         
-        user_id_com_carrinho = "0uxuPY0cbmQhpEz1";
+        response = requests.delete(f"{self.url_base}/{user_id_com_carrinho}")
+
+        assert response.status_code == 400
+        assert response.json()["message"] == "Não é permitido excluir usuário com carrinho cadastrado"
+
+    def test_delete_user_inexistent_200(self):
+        """Cenário 200: Nenhum registro excluído (ID não encontrado)"""
+        id_inexistente = "ID_QUE_NAO_EXISTE"
         
-        # Tentativa de exclusão de usuário que possui vínculo (ex: carrinho)
-        response = requests.delete(f"{self.url_base}/{user_id_com_carrinho}");
+        response = requests.delete(f"{self.url_base}/{id_inexistente}")
 
-        assert response.status_code == 400;
-        assert response.json()["message"] == "Não é permitido excluir usuário com carrinho cadastrado";
-
-    def test_delete_user_inexistent_200(self, base_url):
-        """Cenário 200: Nenhum registro excluído (ID não encontrado)""";
-        # O ServeRest retorna 200 mesmo se o ID não existir, informando que nada foi feito
-        id_inexistente = "ID_QUE_NAO_EXISTE";
-        
-        response = requests.delete(f"{self.url_base}/{id_inexistente}");
-
-        assert response.status_code == 200;
-        assert response.json()["message"] == "Nenhum registro excluído";
+        assert response.status_code == 200
+        assert response.json()["message"] == "Nenhum registro excluído"
