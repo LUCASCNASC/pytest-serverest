@@ -13,16 +13,21 @@ class TestSearchProductById:
 
     def test_search_product_by_id_with_sucess_200(self, auth_token):
         """Cenário 200: Produto encontrado com sucesso"""
-        # Preparação: Criar um produto para garantir que temos um ID válido para buscar
+        # Adicione um número aleatório ao nome para evitar conflitos de duplicidade
+        nome_dinamico = f"Produto Teste {fake.random_number(digits=5)}"
         payload = {
-            "nome": "Produto Teste Busca ID",
+            "nome": nome_dinamico,
             "preco": 50,
             "descricao": "Mousepad",
             "quantidade": 100
         }
         headers = {'Authorization': auth_token}
-        # Usa self.url_base definido no setup da classe
         res_post = requests.post(self.url_base, headers=headers, json=payload)
+        
+        # Opcional: print para debug se falhar de novo
+        if res_post.status_code != 201:
+             print(f"Erro no setup: {res_post.json()}")
+
         produto_id = res_post.json()["_id"]
 
         # Execução: Buscar o produto pelo ID gerado
