@@ -73,3 +73,4 @@ class TestRegisterProduct:
         
         assert response.status_code == 403
         assert response.json()["message"] == "Rota exclusiva para administradores"
+        

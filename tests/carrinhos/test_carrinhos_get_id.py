@@ -42,3 +42,4 @@ class TestSearchCartById:
 
         assert response.status_code == 400
         assert response.json()["message"] == "Carrinho não encontrado"
+        

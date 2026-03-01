@@ -32,3 +32,4 @@ class TestSearchProducts:
             assert "descricao" in produto
             assert "quantidade" in produto
             assert "_id" in produto
+            

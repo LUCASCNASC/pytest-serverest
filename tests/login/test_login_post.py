@@ -34,3 +34,4 @@ class TestLogin:
         
         assert response.status_code == 401
         assert response.json()["message"] == "Email e/ou senha inválidos"
+        

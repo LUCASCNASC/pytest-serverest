@@ -38,3 +38,4 @@ class TestCancelPurchase:
 
         assert response.status_code == 401
         assert response.json()["message"] == "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
+        

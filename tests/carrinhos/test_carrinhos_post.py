@@ -52,3 +52,4 @@ class TestRegisterCart:
         
         assert response.status_code == 401
         assert "Token de acesso ausente" in response.json()["message"]
+        

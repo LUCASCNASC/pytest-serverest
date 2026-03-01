@@ -40,3 +40,4 @@ class TestSearchCarts:
             assert "precoTotal" in carrinho
             assert "idUsuario" in carrinho
             assert "_id" in carrinho
+            

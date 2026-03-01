@@ -49,3 +49,4 @@ class TestRegisterUser:
         
         assert response.status_code == 400
         assert response.json()["message"] == "Este email já está sendo usado"
+        

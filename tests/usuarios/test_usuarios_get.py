@@ -38,3 +38,4 @@ class TestSearchUsers:
         assert "quantidade" in response.json()
         assert "usuarios" in response.json()
         assert isinstance(response.json()["usuarios"], list)
+        
