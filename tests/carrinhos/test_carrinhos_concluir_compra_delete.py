@@ -1,5 +1,5 @@
-import pytest
-import requests
+import pytest;
+import requests;
 
 # Endpoint: DELETE /carrinhos/concluir-compra
 

@@ -1,8 +1,8 @@
-import pytest
-import requests
-from faker import Faker
+import pytest;
+import requests;
+from faker import Faker;
 
-fake = Faker()
+fake = Faker();
 
 class TestDeleteUserById:
     

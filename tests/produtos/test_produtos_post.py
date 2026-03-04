@@ -1,6 +1,6 @@
-import pytest
-import requests
-from faker import Faker
+import pytest;
+import requests;
+from faker import Faker;
 
 # Endpoint: POST /produtos
 

@@ -1,5 +1,5 @@
-import pytest
-import requests
+import pytest;
+import requests;
 
 # Endpoint: GET /produtos/{id}
 

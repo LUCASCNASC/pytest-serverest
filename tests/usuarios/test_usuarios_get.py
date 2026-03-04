@@ -1,10 +1,10 @@
-import pytest
-import requests
-from faker import Faker
+import pytest;
+import requests;
+from faker import Faker;
 
 # Endpoint: GET /usuarios
 
-fake = Faker()
+fake = Faker();
 
 class TestSearchUsers:
     
