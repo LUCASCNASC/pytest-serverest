@@ -2,7 +2,7 @@ import pytest;
 import requests;
 from faker import Faker;
 
-# Endpoint: POST /usuarios
+# Endpoint: Serverest POST /usuarios
 
 fake = Faker();
 

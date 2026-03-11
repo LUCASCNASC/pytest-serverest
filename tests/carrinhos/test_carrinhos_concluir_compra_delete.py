@@ -1,7 +1,7 @@
 import pytest;
 import requests;
 
-# Endpoint: DELETE /carrinhos/concluir-compra
+# Endpoint: Serverest DELETE /carrinhos/concluir-compra
 
 class TestConcludePurchase:
     

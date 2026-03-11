@@ -2,7 +2,7 @@ import pytest;
 import requests;
 from faker import Faker;
 
-# Endpoint: PUT /produtos/{id}
+# Endpoint: Serverest PUT /produtos/{id}
 
 fake = Faker()
 

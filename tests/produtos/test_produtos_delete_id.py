@@ -2,7 +2,7 @@ import pytest;
 import requests;
 from faker import Faker;
 
-# Endpoint: DELETE /produtos/{id}
+# Endpoint: Serverest DELETE /produtos/{id}
 
 fake = Faker()
 

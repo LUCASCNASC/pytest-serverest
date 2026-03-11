@@ -1,7 +1,7 @@
 import pytest;
 import requests;
 
-# Endpoint: POST /login
+# Endpoint: Serverest POST /login
 
 class TestLogin:
     

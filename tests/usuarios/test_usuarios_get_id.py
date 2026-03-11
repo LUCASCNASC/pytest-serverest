@@ -4,7 +4,7 @@ from faker import Faker;
 
 fake = Faker();
 
-# Endpoint: GET /usuarios/{id}
+# Endpoint: Serverest GET /usuarios/{id}
 
 class TestSearchUserById:
     

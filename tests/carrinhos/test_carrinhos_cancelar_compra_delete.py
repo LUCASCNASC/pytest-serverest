@@ -1,7 +1,7 @@
 import pytest;
 import requests;
 
-# Endpoint: DELETE /carrinhos/cancelar-compra
+# Endpoint: Serverest DELETE /carrinhos/cancelar-compra
 class TestCancelPurchase:
     
     @pytest.fixture(autouse=True, scope="class")

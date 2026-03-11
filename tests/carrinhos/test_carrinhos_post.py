@@ -1,7 +1,7 @@
 import pytest;
 import requests;
 
-# Endpoint: POST /carrinhos
+# Endpoint: Serverest POST /carrinhos
 
 class TestRegisterCart:
     

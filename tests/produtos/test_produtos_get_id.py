@@ -1,7 +1,7 @@
 import pytest;
 import requests;
 
-# Endpoint: GET /produtos/{id}
+# Endpoint: Serverest GET /produtos/{id}
 
 class TestSearchProductById:
     
