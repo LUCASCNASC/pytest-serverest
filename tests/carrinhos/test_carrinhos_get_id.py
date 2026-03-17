@@ -8,7 +8,7 @@ class TestSearchCartById:
     # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuímos o valor correto à variável de classe para uso nos testes
+        # AtribuIR o valor correto à variável de classe para uso nos testes
         TestSearchCartById.url_base = f"{base_url}/carrinhos";
 
     def test_search_cart_by_id_with_sucess_200(self, auth_token, produto_id):

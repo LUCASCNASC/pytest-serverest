@@ -9,10 +9,10 @@ fake = Faker();
 class TestSearchUserById:
     
     # Esta fixture resolve o problema da URL. Ela roda uma vez para a classe
-    # e injeta a string correta vinda do conftest.py
+    # e injetra a string correta vinda do conftest.py
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuímos a string da URL base para o atributo da classe
+        # Atribuir a string da URL base para o atributo da classe
         TestSearchUserById.url_base = f"{base_url}/usuarios"
 
     def test_search_user_by_id_with_success_200(self):
@@ -37,7 +37,7 @@ class TestSearchUserById:
 
     def test_search_user_by_id_inexistent_400(self):
         """Valida a busca por um ID que não consta no sistema (Status 400)"""
-        # Usando um ID com formato válido (16 caracteres), mas que não existe
+        # Usar um ID com formato válido (16 caracteres), mas que não existe
         id_inexistente = "nonExistent12345"
 
         response = requests.get(f"{self.url_base}/{id_inexistente}")

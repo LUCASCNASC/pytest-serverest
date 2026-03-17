@@ -9,14 +9,14 @@ fake = Faker();
 class TestUpdateUserById:
     
     # Esta fixture resolve o problema da injeção da URL no nível da classe.
-    # Ela roda uma vez para a classe e atribui a string final vinda do conftest.
+    # Rodar uma vez para a classe e atribui a string final vinda do conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
         TestUpdateUserById.url_base = f"{base_url}/usuarios"
 
     def test_put_change_user_with_success_200(self):
         """Cenário 200: Registro alterado com sucesso"""
-        # Cria um usuário para garantir que o ID existe
+        # Criar um usuário para garantir que o ID existe
         payload_create = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -41,7 +41,7 @@ class TestUpdateUserById:
 
     def test_put_register_new_user_201(self):
         """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)"""
-        # Geramos um ID aleatório que não existe no sistema
+        # Gerar um ID aleatório que não existe no sistema
         id_inexistente = f"novo_{fake.uuid4()[:8]}"
         
         payload = {
@@ -59,19 +59,19 @@ class TestUpdateUserById:
 
     def test_put_email_duplicate_400(self):
         """Cenário 400: Este email já está sendo usado"""
-        # Garante um usuário 'A' no sistema
+        # Garantir um usuário 'A' no sistema
         email_em_uso = fake.email()
         requests.post(self.url_base, json={
             "nome": "Usuario A", "email": email_em_uso, "password": "123", "administrador": "true"
         })
 
-        # Garante um usuário 'B' que tentaremos editar
+        # Garantir um usuário 'B' que tentaremos editar
         res_b = requests.post(self.url_base, json={
             "nome": "Usuario B", "email": fake.email(), "password": "123", "administrador": "true"
         })
         id_b = res_b.json()["_id"]
 
-        # Tenta dar um PUT no usuário 'B' usando o email do usuário 'A'
+        # Tentar dar um PUT no usuário 'B' usando o email do usuário 'A'
         payload_conflito = {
             "nome": "Lucas Conflito",
             "email": email_em_uso,

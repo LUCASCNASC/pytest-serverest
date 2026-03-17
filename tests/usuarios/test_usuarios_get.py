@@ -11,7 +11,7 @@ class TestSearchUsers:
     # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuímos o valor correto à variável de classe
+        # Atribuir o valor correto à variável de classe
         TestSearchUsers.url = f"{base_url}/usuarios"
 
     def test_register_user_with_success_201(self):

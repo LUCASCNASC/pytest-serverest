@@ -8,7 +8,7 @@ class TestLogin:
     # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe para uso nos métodos
+        # Atribuir o valor da string de URL ao atributo da classe para uso nos métodos
         TestLogin.url = f"{base_url}/login";
 
     def test_login_with_sucess_200(self, usuario_global):

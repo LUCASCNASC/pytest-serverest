@@ -7,10 +7,10 @@ fake = Faker();
 class TestDeleteUserById:
     
     # Esta fixture resolve o problema da URL. Ela roda uma vez para a classe
-    # e injeta a string correta vinda do conftest.py
+    # e injetar a string correta vinda do conftest.py
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Usamos o nome da classe para garantir que o valor seja atribuído corretamente
+        # Usar o nome da classe para garantir que o valor seja atribuído corretamente
         TestDeleteUserById.url_base = f"{base_url}/usuarios"
 
     def test_delete_user_with_sucess_200(self):

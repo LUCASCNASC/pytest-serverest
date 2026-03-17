@@ -8,7 +8,7 @@ class TestRegisterCart:
     # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe
+        # Atribuir o valor da string de URL ao atributo da classe
         TestRegisterCart.url = f"{base_url}/carrinhos";
 
     def test_register_cart_sucess_201(self, auth_token, produto_id):
@@ -34,10 +34,10 @@ class TestRegisterCart:
         headers = {'Authorization': auth_token};
         payload = {"produtos": [{"idProduto": produto_id, "quantidade": 1}]};
         
-        # Garante que já existe um carrinho para este usuário
+        # Garantir que já existe um carrinho para este usuário
         requests.post(self.url, headers=headers, json=payload);
         
-        # Tenta cadastrar o segundo carrinho para o mesmo usuário
+        # Tentar cadastrar o segundo carrinho para o mesmo usuário
         response = requests.post(self.url, headers=headers, json=payload);
         
         assert response.status_code == 400;

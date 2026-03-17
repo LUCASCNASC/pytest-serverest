@@ -9,7 +9,7 @@ fake = Faker();
 class TestRegisterUser:
     
     # Esta fixture resolve o problema da URL no nível da classe. 
-    # Ela busca a base_url do conftest e a atribui ao atributo 'url' da classe.
+    # Buscar a base_url do conftest e a atribui ao atributo 'url' da classe.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
         TestRegisterUser.url = f"{base_url}/usuarios"
@@ -41,7 +41,7 @@ class TestRegisterUser:
             "administrador": "true"
         }
         
-        # Garante que o e-mail já existe no sistema antes de validar o erro
+        # Garantir que o e-mail já existe no sistema antes de validar o erro
         requests.post(self.url, json=payload)
         
         # Segunda tentativa

@@ -11,7 +11,7 @@ class TestRegisterProduct:
     # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe
+        # Atribuir o valor da string de URL ao atributo da classe
         TestRegisterProduct.url = f"{base_url}/produtos";
 
     def test_register_product_with_sucess_201(self, auth_token):

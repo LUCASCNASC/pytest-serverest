@@ -11,7 +11,7 @@ class TestUpdateProductById:
     # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe
+        # Atribuir o valor da string de URL ao atributo da classe
         TestUpdateProductById.url_base = f"{base_url}/produtos";
 
     def test_change_product_with_sucess_200(self, auth_token, produto_id):
@@ -49,13 +49,13 @@ class TestUpdateProductById:
         """Cenário 400: Já existe produto com esse nome""";
         headers = {'Authorization': auth_token};
         
-        # Criamos um segundo produto 'B' para tentar roubar o nome dele
+        # Criar um segundo produto 'B' para tentar roubar o nome dele
         nome_em_uso = f"Nome Ocupado {fake.random_number()}";
         requests.post(self.url_base, headers=headers, json={
             "nome": nome_em_uso, "preco": 10, "descricao": "D", "quantidade": 1
         });
 
-        # Tentamos editar o produto 'A' (produto_id) usando o nome do produto 'B'
+        # Tentar editar o produto 'A' (produto_id) usando o nome do produto 'B'
         payload_conflito = {
             "nome": nome_em_uso,
             "preco": 50,

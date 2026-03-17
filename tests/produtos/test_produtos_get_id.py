@@ -13,7 +13,7 @@ class TestSearchProductById:
 
     def test_search_product_by_id_with_sucess_200(self, auth_token):
         """Cenário 200: Produto encontrado com sucesso""";
-        # Adicione um número aleatório ao nome para evitar conflitos de duplicidade
+        # Adicionar um número aleatório ao nome para evitar conflitos de duplicidade
         nome_dinamico = f"Produto Teste {fake.random_number(digits=5)}";
         payload = {
             "nome": nome_dinamico,
@@ -40,7 +40,7 @@ class TestSearchProductById:
 
     def test_search_product_with_id_inexistent_400(self):
         """Cenário 400: Produto não encontrado""";
-        # Usando um ID que segue o padrão de formato mas não existe no banco
+        # Usar um ID que segue o padrão de formato mas não existe no banco
         id_inexistente = "nonExistent12345";
 
         response = requests.get(f"{self.url_base}/{id_inexistente}");

@@ -8,7 +8,7 @@ class TestSearchCarts:
     # Esta fixture centraliza a URL na classe usando a base_url injetada pelo Pytest
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe
+        # Atribuir o valor da string de URL ao atributo da classe
         TestSearchCarts.url = f"{base_url}/carrinhos";
 
     def test_list_cart_with_sucess_200(self, auth_token, produto_id):
@@ -22,7 +22,7 @@ class TestSearchCarts:
                 }
             ]
         };
-        # Cria um carrinho vinculado ao seu usuário global usando self.url
+        # CriaR um carrinho vinculado ao seu usuário global usando self.url
         requests.post(self.url, headers={'Authorization': auth_token}, json=payload);
 
         # Execução: Lista todos os carrinhos
