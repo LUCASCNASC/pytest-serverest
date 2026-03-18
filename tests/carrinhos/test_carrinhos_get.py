@@ -22,7 +22,7 @@ class TestSearchCarts:
                 }
             ]
         };
-        # CriaR um carrinho vinculado ao seu usuário global usando self.url
+        # Criar um carrinho vinculado ao seu usuário global usando self.url
         requests.post(self.url, headers={'Authorization': auth_token}, json=payload);
 
         # Execução: Lista todos os carrinhos

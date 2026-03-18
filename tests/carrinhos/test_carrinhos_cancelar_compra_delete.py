@@ -22,7 +22,7 @@ class TestCancelPurchase:
                 }
             ]
         };
-        # CriaR o carrinho antes usando a URL definida na classe
+        # Criar o carrinho antes usando a URL definida na classe
         requests.post(self.url_carrinhos, headers=headers, json=payload);
 
         # Execução: Cancela a compra
