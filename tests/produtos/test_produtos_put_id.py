@@ -49,7 +49,7 @@ class TestUpdateProductById:
         """Cenário 400: Já existe produto com esse nome""";
         headers = {'Authorization': auth_token};
         
-        # Criar um segundo produto 'B' para tentar roubar o nome dele
+        # Create um segundo produto 'B' para tentar roubar o nome dele
         nome_em_uso = f"Nome Ocupado {fake.random_number()}";
         requests.post(self.url_base, headers=headers, json={
             "nome": nome_em_uso, "preco": 10, "descricao": "D", "quantidade": 1

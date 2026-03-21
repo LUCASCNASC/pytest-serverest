@@ -13,7 +13,7 @@ class TestSearchProducts:
 
     def test_list_products_with_sucess_200(self):
         """Valida a listagem de produtos com sucesso (Status 200)""";
-        # Execução da requisição GET usando o self.url definido no setup
+        # Execution da requisição GET usando o self.url definido no setup
         response = requests.get(self.url);
 
         assert response.status_code == 200;

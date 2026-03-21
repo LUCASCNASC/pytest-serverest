@@ -22,10 +22,10 @@ class TestCancelPurchase:
                 }
             ]
         };
-        # Criar o carrinho antes usando a URL definida na classe
+        # Create o carrinho antes usando a URL definida na classe
         requests.post(self.url_carrinhos, headers=headers, json=payload);
 
-        # Execução: Cancela a compra
+        # Execution: Cancela a compra
         response = requests.delete(self.url_cancelar, headers=headers);
 
         assert response.status_code == 200;
@@ -33,7 +33,7 @@ class TestCancelPurchase:
 
     def test_cancel_purchase_without_token_401(self):
         """Cenário 401: Tentativa de cancelar compra sem autenticação"""
-        # Execução sem o header de Authorization usando a URL da classe
+        # Execution sem o header de Authorization usando a URL da classe
         response = requests.delete(self.url_cancelar);
 
         assert response.status_code == 401;

@@ -27,7 +27,7 @@ class TestDeleteProductById:
         res_post = requests.post(self.url_base, headers=headers, json=payload);
         produto_id = res_post.json()["_id"];
 
-        # Execução: Excluir o produto usando self.url_base
+        # Execution: Excluir o produto usando self.url_base
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers);
 
         assert response.status_code == 200;
@@ -43,7 +43,7 @@ class TestDeleteProductById:
         };
         requests.post(self.url_carrinhos, headers=headers, json=payload_carrinho);
 
-        # Execução: Tentar excluir o produto que está no carrinho
+        # Execution: Tentar excluir o produto que está no carrinho
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers);
 
         assert response.status_code == 400;
@@ -51,7 +51,7 @@ class TestDeleteProductById:
 
     def test_delete_product_without_token_401(self):
         """Cenário 401: Token ausente ou inválido""";
-        # Execução sem header de autorização
+        # Execution sem header de autorização
         response = requests.delete(f"{self.url_base}/id_qualquer");
         
         assert response.status_code == 401;

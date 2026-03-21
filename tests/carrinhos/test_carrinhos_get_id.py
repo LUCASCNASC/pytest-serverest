@@ -24,7 +24,7 @@ class TestSearchCartById:
         );
         carrinho_id = res_post.json()["_id"];
 
-        # Execução: Buscar o carrinho pelo ID gerado usando self.url_base
+        # Execution: Buscar o carrinho pelo ID gerado usando self.url_base
         response = requests.get(f"{self.url_base}/{carrinho_id}");
 
         # Validações conforme a documentação

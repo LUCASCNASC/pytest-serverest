@@ -37,7 +37,7 @@ class TestConcludePurchase:
 
     def test_try_conclude_purchase_without_token_401(self):
         """Valida erro ao tentar concluir compra sem autenticação (Status 401)"""
-        # Execução sem o header de Authorization usando a URL da classe
+        # Execution sem o header de Authorization usando a URL da classe
         response = requests.delete(self.url_concluir);
 
         assert response.status_code == 401;
