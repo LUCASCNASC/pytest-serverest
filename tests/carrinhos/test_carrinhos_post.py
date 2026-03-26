@@ -5,10 +5,10 @@ import requests;
 
 class TestRegisterCart:
     
-    # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
+    # This fixture solves the URL problem in the class by injecting the conftest string.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor da string de URL ao atributo da classe
+        # Assign the URL string value to the class attribute.
         TestRegisterCart.url = f"{base_url}/carrinhos";
 
     def test_register_cart_sucess_201(self, auth_token, produto_id):
@@ -22,7 +22,7 @@ class TestRegisterCart:
                 }
             ]
         };
-        # Usa self.url definido no setup da classe
+        # Use self.url defined in the class setup.
         response = requests.post(self.url, headers=headers, json=payload);
         
         assert response.status_code == 201;
@@ -34,10 +34,10 @@ class TestRegisterCart:
         headers = {'Authorization': auth_token};
         payload = {"produtos": [{"idProduto": produto_id, "quantidade": 1}]};
         
-        # Garantir que já existe um carrinho para este usuário
+        # Ensure that a cart already exists for this user.
         requests.post(self.url, headers=headers, json=payload);
         
-        # Tentar cadastrar o segundo carrinho para o mesmo usuário
+        # Trying to register a second cart for the same user.
         response = requests.post(self.url, headers=headers, json=payload);
         
         assert response.status_code == 400;
@@ -47,7 +47,7 @@ class TestRegisterCart:
         """Cenário 401: Token ausente, inválido ou expirado""";
         payload = {"produtos": [{"idProduto": "id_qualquer", "quantidade": 1}]};
         
-        # Requisição sem headers de autorização usando self.url
+        # Request without authorization headers using self.url
         response = requests.post(self.url, json=payload);
         
         assert response.status_code == 401;

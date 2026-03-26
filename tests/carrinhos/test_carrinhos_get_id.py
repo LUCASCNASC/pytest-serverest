@@ -5,15 +5,15 @@ import requests;
 
 class TestSearchCartById:
     
-    # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
+    # This fixture ensures that the URL is correctly constructed using the base_url from conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # AtribuIR o valor correto à variável de classe para uso nos testes
+        # Assign the correct value to the class variable for use in the tests.
         TestSearchCartById.url_base = f"{base_url}/carrinhos";
 
     def test_search_cart_by_id_with_sucess_200(self, auth_token, produto_id):
         """Cenário 200: Carrinho encontrado com sucesso""";
-        # Preparação: Criar um carrinho para garantir que temos um ID válido
+        # Preparation: Create a cart to ensure we have a valid ID.
         payload = {
             "produtos": [{"idProduto": produto_id, "quantidade": 1}]
         };
@@ -24,10 +24,10 @@ class TestSearchCartById:
         );
         carrinho_id = res_post.json()["_id"];
 
-        # Execution: Buscar o carrinho pelo ID gerado usando self.url_base
+        # Execution: Retrieve the cart by the ID generated using self.url_base.
         response = requests.get(f"{self.url_base}/{carrinho_id}");
 
-        # Validações conforme a documentação
+        # Validations as per documentation.
         assert response.status_code == 200;
         assert response.json()["_id"] == carrinho_id;
         assert "produtos" in response.json();
@@ -35,7 +35,7 @@ class TestSearchCartById:
 
     def test_search_cart_by_id_inexistent_400(self):
         """Cenário 400: Carrinho não encontrado"""
-        # Usando um ID com formato válido, mas que não existe no banco
+        # Using an ID with a valid format, but which does not exist in the database.
         id_inexistente = "nonExistent12345";
 
         response = requests.get(f"{self.url_base}/{id_inexistente}");

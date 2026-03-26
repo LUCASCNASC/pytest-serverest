@@ -5,15 +5,15 @@ import requests;
 
 class TestSearchProductById:
     
-    # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
+    # This fixture solves the URL problem in the class by injecting the conftest string.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribui o valor da string de URL ao atributo da classe
+        # Assign the URL string value to the class attribute
         TestSearchProductById.url_base = f"{base_url}/produtos";
 
     def test_search_product_by_id_with_sucess_200(self, auth_token):
         """Cenário 200: Produto encontrado com sucesso""";
-        # Adicionar um número aleatório ao nome para evitar conflitos de duplicidade
+        # Add a random number to the name to avoid duplicate conflicts.
         nome_dinamico = f"Produto Teste {fake.random_number(digits=5)}";
         payload = {
             "nome": nome_dinamico,
@@ -24,13 +24,13 @@ class TestSearchProductById:
         headers = {'Authorization': auth_token};
         res_post = requests.post(self.url_base, headers=headers, json=payload);
         
-        # Opcional: print para debug se falhar de novo
+        # Optional: print for debugging if it fails again.
         if res_post.status_code != 201:
              print(f"Erro no setup: {res_post.json()}");
 
         produto_id = res_post.json()["_id"];
 
-        # Execution: Buscar o produto pelo ID gerado
+        # Execution: Search for the product using the generated ID.
         response = requests.get(f"{self.url_base}/{produto_id}");
 
         assert response.status_code == 200;
@@ -40,7 +40,7 @@ class TestSearchProductById:
 
     def test_search_product_with_id_inexistent_400(self):
         """Cenário 400: Produto não encontrado""";
-        # Usar um ID que segue o padrão de formato mas não existe no banco
+        # Using an ID that follows the format pattern but does not exist in the database.
         id_inexistente = "nonExistent12345";
 
         response = requests.get(f"{self.url_base}/{id_inexistente}");

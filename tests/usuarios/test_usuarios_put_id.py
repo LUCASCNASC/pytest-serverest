@@ -8,15 +8,15 @@ fake = Faker();
 
 class TestUpdateUserById:
     
-    # Esta fixture resolve o problema da injeção da URL no nível da classe.
-    # Rodar uma vez para a classe e atribui a string final vinda do conftest.
+    # This fixture solves the problem of URL injection at the class level.
+    # Run once for the class and assign the final string coming from the conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
         TestUpdateUserById.url_base = f"{base_url}/usuarios"
 
     def test_put_change_user_with_success_200(self):
         """Cenário 200: Registro alterado com sucesso"""
-        # Create um usuário para garantir que o ID existe
+        # Create a user to ensure the ID exists.
         payload_create = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -26,7 +26,7 @@ class TestUpdateUserById:
         res_post = requests.post(self.url_base, json=payload_create)
         user_id = res_post.json()["_id"]
 
-        # Dados para alteração
+        # Data for change.
         payload_update = {
             "nome": "Lucas Editado",
             "email": fake.email(),
@@ -41,7 +41,7 @@ class TestUpdateUserById:
 
     def test_put_register_new_user_201(self):
         """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)"""
-        # Gerar um ID aleatório que não existe no sistema
+        # Generate a random ID that does not exist in the system.
         id_inexistente = f"novo_{fake.uuid4()[:8]}"
         
         payload = {
@@ -59,19 +59,19 @@ class TestUpdateUserById:
 
     def test_put_email_duplicate_400(self):
         """Cenário 400: Este email já está sendo usado"""
-        # Garantir um usuário 'A' no sistema
+        # Ensure a user 'A' exists in the system
         email_em_uso = fake.email()
         requests.post(self.url_base, json={
             "nome": "Usuario A", "email": email_em_uso, "password": "123", "administrador": "true"
         })
 
-        # Garantir um usuário 'B' que tentaremos editar
+        # Ensure a user 'B' exists in the system
         res_b = requests.post(self.url_base, json={
             "nome": "Usuario B", "email": fake.email(), "password": "123", "administrador": "true"
         })
         id_b = res_b.json()["_id"]
 
-        # Tentar dar um PUT no usuário 'B' usando o email do usuário 'A'
+        # Try to update user 'B' with the email of user 'A'
         payload_conflito = {
             "nome": "Lucas Conflito",
             "email": email_em_uso,

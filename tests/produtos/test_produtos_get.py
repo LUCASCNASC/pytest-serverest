@@ -5,15 +5,15 @@ import requests;
 
 class TestSearchProducts:
     
-    # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
+    # This fixture solves the URL problem in the class by injecting the conftest string.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor da string de URL ao atributo da classe
+        # Assign the URL string value to the class attribute
         TestSearchProducts.url = f"{base_url}/produtos";
 
     def test_list_products_with_sucess_200(self):
         """Valida a listagem de produtos com sucesso (Status 200)""";
-        # Execution da requisição GET usando o self.url definido no setup
+        # Execution of the GET request using the self.url defined in the setup.
         response = requests.get(self.url);
 
         assert response.status_code == 200;
@@ -24,7 +24,7 @@ class TestSearchProducts:
         assert "produtos" in response_data;
         assert isinstance(response_data["produtos"], list);
 
-        # Se houver produtos na lista, valida a estrutura do primeiro item
+        # If there are products in the list, validate the structure of the first item.
         if response_data["quantidade"] > 0:
             produto = response_data["produtos"][0];
             assert "nome" in produto;

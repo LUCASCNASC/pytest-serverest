@@ -5,10 +5,10 @@ import requests;
 
 class TestLogin:
     
-    # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
+    # This fixture ensures that the URL is correctly constructed using the base_url from conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor da string de URL ao atributo da classe para uso nos métodos
+        # Assign the URL string value to the class attribute for use in the methods
         TestLogin.url = f"{base_url}/login";
 
     def test_login_with_sucess_200(self, usuario_global):
@@ -17,7 +17,7 @@ class TestLogin:
             "email": usuario_global["email"],
             "password": usuario_global["password"]
         };
-        # Agora self.url é uma string válida injetada pelo setup_class
+        # Now self.url is a valid URL string injected by the setup_class fixture
         response = requests.post(self.url, json=payload);
         
         assert response.status_code == 200;

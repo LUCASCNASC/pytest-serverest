@@ -8,11 +8,11 @@ fake = Faker();
 
 class TestSearchUserById:
     
-    # Esta fixture resolve o problema da URL. Ela roda uma vez para a classe
-    # e injetra a string correta vinda do conftest.py
+    # This fixture solves the URL problem. It runs once for the class.
+    # and inject the correct string from conftest.py
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir a string da URL base para o atributo da classe
+        # Assign the URL string value to the class attribute
         TestSearchUserById.url_base = f"{base_url}/usuarios"
 
     def test_search_user_by_id_with_success_200(self):
@@ -27,7 +27,7 @@ class TestSearchUserById:
         cadastro_res = requests.post(self.url_base, json=payload_cadastro)
         user_id = cadastro_res.json()["_id"]
 
-        # Agora, buscamos esse ID específico
+        # Now, we are looking for that specific ID.
         response = requests.get(f"{self.url_base}/{user_id}")
         
         assert response.status_code == 200
@@ -37,12 +37,12 @@ class TestSearchUserById:
 
     def test_search_user_by_id_inexistent_400(self):
         """Valida a busca por um ID que não consta no sistema (Status 400)"""
-        # Usar um ID com formato válido (16 caracteres), mas que não existe
+        # Using an ID with a valid format (16 characters), but which does not exist.
         id_inexistente = "nonExistent12345"
 
         response = requests.get(f"{self.url_base}/{id_inexistente}")
 
-        # Se houver erro de taxa (Rate Limit 429), o print abaixo ajudará no debug
+        # If there is a rate limit error (429), the print below will help with debugging
         if response.status_code != 400:
             print(f"\nDebug - Status: {response.status_code}")
             print(f"Debug - Body: {response.json()}")

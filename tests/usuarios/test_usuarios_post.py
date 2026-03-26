@@ -8,8 +8,8 @@ fake = Faker();
 
 class TestRegisterUser:
     
-    # Esta fixture resolve o problema da URL no nível da classe. 
-    # Buscar a base_url do conftest e a atribui ao atributo 'url' da classe.
+    # This fixture solves the URL problem at the class level. 
+    # Fetch the base_url of the conftest and assign it to the 'url' attribute of the class.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
         TestRegisterUser.url = f"{base_url}/usuarios"
@@ -23,7 +23,7 @@ class TestRegisterUser:
             "administrador": "true"
         }
         
-        # Agora self.url contém a string correta (ex: https://serverest.dev/usuarios)
+        # Now self.url contains the string "https://serverest.dev/usuarios"
         response = requests.post(self.url, json=payload)
         
         assert response.status_code == 201
@@ -32,7 +32,7 @@ class TestRegisterUser:
 
     def test_register_user_email_duplicate_400(self):
         """Valida a tentativa de cadastro com e-mail já existente (Status 400)"""
-        # Massa de teste com e-mail dinâmico para evitar conflitos, mas repetido no cenário
+        # Test data with dynamic email to avoid conflicts, but repeated in the scenario.
         email_repetido = fake.email()
         payload = {
             "nome": "Fulano da silva",
@@ -41,10 +41,10 @@ class TestRegisterUser:
             "administrador": "true"
         }
         
-        # Garantir que o e-mail já existe no sistema antes de validar o erro
+        # Ensure the email address already exists in the system before validating the error.
         requests.post(self.url, json=payload)
         
-        # Segunda tentativa
+        # Second attempt.
         response = requests.post(self.url, json=payload)
         
         assert response.status_code == 400

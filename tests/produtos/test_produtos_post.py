@@ -8,10 +8,10 @@ fake = Faker()
 
 class TestRegisterProduct:
     
-    # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
+    # This fixture resolves the URL problem in the class by injecting the conftest string.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor da string de URL ao atributo da classe
+        # Assign the URL string value to the class attribute
         TestRegisterProduct.url = f"{base_url}/produtos";
 
     def test_register_product_with_sucess_201(self, auth_token):
@@ -23,7 +23,7 @@ class TestRegisterProduct:
             "descricao": "Mouse",
             "quantidade": 381
         };
-        # Usa self.url definido no setup da classe
+        # Uses self.url defined in the class setup
         response = requests.post(self.url, headers=headers, json=payload);
         
         assert response.status_code == 201;
@@ -36,10 +36,10 @@ class TestRegisterProduct:
         nome_fixo = f"Produto Repetido {fake.random_number()}";
         payload = {"nome": nome_fixo, "preco": 10, "descricao": "Teste", "quantidade": 5};
         
-        # Primeira criação
+        # First creation.
         requests.post(self.url, headers=headers, json=payload);
         
-        # Segunda tentativa com o mesmo nome
+        # Second attempt with the same name
         response = requests.post(self.url, headers=headers, json=payload);
         
         assert response.status_code == 400;
@@ -47,7 +47,7 @@ class TestRegisterProduct:
 
     def test_register_product_without_token_401(self):
         """Cenário 401: Token ausente, inválido ou expirado""";
-        # Requisição enviada sem o header Authorization usando self.url
+        # Request sent without the Authorization header using self.url
         response = requests.post(self.url, json={});
         
         assert response.status_code == 401;
@@ -55,7 +55,7 @@ class TestRegisterProduct:
 
     def test_register_product_without_permission_admin_403(self, base_url):
         """Cenário 403: Rota exclusiva para administradores""";
-        # 1. Criar e logar com um usuário comum (administrador: false)
+        # 1. Create and log in with a regular user (admin: false)
         email_comum = fake.email();
         url_usuarios = f"{base_url}/usuarios";
         url_login = f"{base_url}/login";
@@ -67,7 +67,7 @@ class TestRegisterProduct:
                                   json={"email": email_comum, "password": "123"});
         token_comum = login_res.json()["authorization"];
         
-        # 2. Tentar cadastrar produto com token sem permissão
+        # 2. Attempt to register a product with a token without permission
         headers = {'Authorization': token_comum};
         response = requests.post(self.url, headers=headers, json={});
         

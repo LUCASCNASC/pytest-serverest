@@ -8,10 +8,10 @@ fake = Faker()
 
 class TestUpdateProductById:
     
-    # Esta fixture resolve o problema da URL na classe, injetando a string do conftest
+    # This fixture solves the URL problem in the class by injecting the conftest string.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor da string de URL ao atributo da classe
+        # Assign the URL string value to the class attribute
         TestUpdateProductById.url_base = f"{base_url}/produtos";
 
     def test_change_product_with_sucess_200(self, auth_token, produto_id):
@@ -23,7 +23,7 @@ class TestUpdateProductById:
             "descricao": "Item Editado",
             "quantidade": 50
         };
-        # Usa self.url_base definido no setup da classe
+        # Uses self.url_base defined in the class setup
         response = requests.put(f"{self.url_base}/{produto_id}", headers=headers, json=payload);
 
         assert response.status_code == 200;
@@ -49,13 +49,13 @@ class TestUpdateProductById:
         """Cenário 400: Já existe produto com esse nome""";
         headers = {'Authorization': auth_token};
         
-        # Create um segundo produto 'B' para tentar roubar o nome dele
+        # Create a second product 'B' to try and steal its name.
         nome_em_uso = f"Nome Ocupado {fake.random_number()}";
         requests.post(self.url_base, headers=headers, json={
             "nome": nome_em_uso, "preco": 10, "descricao": "D", "quantidade": 1
         });
 
-        # Tentar editar o produto 'A' (produto_id) usando o nome do produto 'B'
+        # Trying to edit product 'A' (product_id) using the product name 'B'.
         payload_conflito = {
             "nome": nome_em_uso,
             "preco": 50,
@@ -69,7 +69,7 @@ class TestUpdateProductById:
 
     def test_put_token_empty_401(self):
         """Cenário 401: Token ausente ou inválido""";
-        # Requisição enviada sem header de autorização usando self.url_base
+        # Request sent without authorization header using self.url_base.
         response = requests.put(f"{self.url_base}/qualquer_id", json={});
         
         assert response.status_code == 401;
@@ -89,7 +89,7 @@ class TestUpdateProductById:
                                   json={"email": email_comum, "password": "123"});
         token_comum = login_res.json()["authorization"];
         
-        # 2. Tentar editar produto com token sem permissão
+        # 2. Attempt to edit a product with a token without permission
         headers = {'Authorization': token_comum};
         response = requests.put(f"{self.url_base}/id_qualquer", headers=headers, json={});
         

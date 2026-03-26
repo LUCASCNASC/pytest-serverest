@@ -8,10 +8,10 @@ fake = Faker();
 
 class TestSearchUsers:
     
-    # Esta fixture garante que a URL seja montada corretamente usando a base_url do conftest
+    # This fixture ensures that the URL is correctly constructed using the base_url from conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Atribuir o valor correto à variável de classe
+        # Assign the URL string value to the class attribute
         TestSearchUsers.url = f"{base_url}/usuarios"
 
     def test_register_user_with_success_201(self):
@@ -23,7 +23,7 @@ class TestSearchUsers:
             "administrador": "true"
         }
         
-        # Agora self.url contém a string "https://serverest.dev/usuarios"
+        # Now self.url contains the string "https://serverest.dev/usuarios"
         response = requests.post(self.url, json=payload)
         
         assert response.status_code == 201

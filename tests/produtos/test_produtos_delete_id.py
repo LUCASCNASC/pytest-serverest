@@ -8,7 +8,7 @@ fake = Faker()
 
 class TestDeleteProductById:
     
-    # Fixture que configura as URLs da classe usando a base_url do conftest
+    # Fixture that configures the class URLs using the base_url from conftest.
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
         TestDeleteProductById.url_base = f"{base_url}/produtos";
@@ -16,7 +16,7 @@ class TestDeleteProductById:
 
     def test_delete_product_with_sucess_200(self, auth_token):
         """Cenário 200: Registro excluído com sucesso""";
-        # Preparação: Criar um produto para garantir um ID válido
+        # Preparation: Create a product to ensure a valid ID.
         headers = {'Authorization': auth_token};
         payload = {
             "nome": f"Produto para Deletar {fake.random_number()}",
@@ -27,7 +27,7 @@ class TestDeleteProductById:
         res_post = requests.post(self.url_base, headers=headers, json=payload);
         produto_id = res_post.json()["_id"];
 
-        # Execution: Excluir o produto usando self.url_base
+        # Execution: Delete the product using self.url_base.
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers);
 
         assert response.status_code == 200;
@@ -37,13 +37,13 @@ class TestDeleteProductById:
         """Cenário 400: Não é permitido excluir produto que faz parte de carrinho""";
         headers = {'Authorization': auth_token};
         
-        # Preparação: Colocar o produto em um carrinho (usando a URL da classe)
+        # Preparation: Place the product in a cart (using the class URL)
         payload_carrinho = {
             "produtos": [{"idProduto": produto_id, "quantidade": 1}]
         };
         requests.post(self.url_carrinhos, headers=headers, json=payload_carrinho);
 
-        # Execution: Tentar excluir o produto que está no carrinho
+        # Execution: Attempt to delete the product that is in the cart.
         response = requests.delete(f"{self.url_base}/{produto_id}", headers=headers);
 
         assert response.status_code == 400;
@@ -51,7 +51,7 @@ class TestDeleteProductById:
 
     def test_delete_product_without_token_401(self):
         """Cenário 401: Token ausente ou inválido""";
-        # Execution sem header de autorização
+            # Execution sem header de autorização
         response = requests.delete(f"{self.url_base}/id_qualquer");
         
         assert response.status_code == 401;
@@ -59,7 +59,7 @@ class TestDeleteProductById:
 
     def test_delete_product_without_permission_admin_403(self, base_url):
         """Cenário 403: Rota exclusiva para administradores""";
-        # 1. Criar e logar com usuário comum (admin: false)
+        # 1. Create and log in with a regular user (admin: false)
         email_comum = fake.email();
         url_usuarios = f"{base_url}/usuarios";
         url_login = f"{base_url}/login";
@@ -70,7 +70,7 @@ class TestDeleteProductById:
         login_res = requests.post(url_login, json={"email": email_comum, "password": "123"});
         token_comum = login_res.json()["authorization"];
         
-        # 2. Tentativa de exclusão sem permissão
+        # 2. Attempted deletion without permission
         headers = {'Authorization': token_comum};
         response = requests.delete(f"{self.url_base}/id_qualquer", headers=headers);
         

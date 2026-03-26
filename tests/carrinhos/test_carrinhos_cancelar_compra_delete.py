@@ -6,7 +6,7 @@ class TestCancelPurchase:
     
     @pytest.fixture(autouse=True, scope="class")
     def setup_class(self, base_url):
-        # Define as URLs no nível da classe usando a string real da base_url
+        # Define the URLs at the class level using the actual base_url string.
         TestCancelPurchase.url_carrinhos = f"{base_url}/carrinhos";
         TestCancelPurchase.url_cancelar = f"{TestCancelPurchase.url_carrinhos}/cancelar-compra";
 
@@ -22,10 +22,10 @@ class TestCancelPurchase:
                 }
             ]
         };
-        # Create o carrinho antes usando a URL definida na classe
+        # Create the cart first using the URL defined in the class.
         requests.post(self.url_carrinhos, headers=headers, json=payload);
 
-        # Execution: Cancela a compra
+        # Execution: Cancel the purchase.
         response = requests.delete(self.url_cancelar, headers=headers);
 
         assert response.status_code == 200;
@@ -33,7 +33,7 @@ class TestCancelPurchase:
 
     def test_cancel_purchase_without_token_401(self):
         """Cenário 401: Tentativa de cancelar compra sem autenticação"""
-        # Execution sem o header de Authorization usando a URL da classe
+        # Execution without the Authorization header using the class URL.
         response = requests.delete(self.url_cancelar);
 
         assert response.status_code == 401;
