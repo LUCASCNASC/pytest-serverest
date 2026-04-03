@@ -14,7 +14,7 @@ class TestDeleteUserById:
         TestDeleteUserById.url_base = f"{base_url}/usuarios"
 
     def test_delete_user_with_sucess_200(self):
-        """Cenário 200: Registro excluído com sucesso"""
+        """Status 200: Registro excluído com sucesso"""
         payload = {
             "nome": fake.name(),
             "email": fake.email(),
@@ -31,7 +31,7 @@ class TestDeleteUserById:
         assert response.json()["message"] == "Registro excluído com sucesso"
 
     def test_delete_user_with_active_cart_400(self):
-        """Cenário 400: Não é permitido excluir usuário com carrinho ativo"""
+        """Status 400: Não é permitido excluir usuário com carrinho ativo"""
         user_id_com_carrinho = "0uxuPY0cbmQhpEz1"
         
         response = requests.delete(f"{self.url_base}/{user_id_com_carrinho}")
@@ -40,7 +40,7 @@ class TestDeleteUserById:
         assert response.json()["message"] == "Não é permitido excluir usuário com carrinho cadastrado"
 
     def test_delete_user_inexistent_200(self):
-        """Cenário 200: Nenhum registro excluído (ID não encontrado)"""
+        """Status 200: Nenhum registro excluído (ID não encontrado)"""
         id_inexistente = "ID_QUE_NAO_EXISTE"
         
         response = requests.delete(f"{self.url_base}/{id_inexistente}")

@@ -11,7 +11,7 @@ class TestCancelPurchase:
         TestCancelPurchase.url_cancelar = f"{TestCancelPurchase.url_carrinhos}/cancelar-compra";
 
     def test_cancel_purchase_with_sucesso_200(self, auth_token, produto_id):
-        """Cenário 200: Registro excluído com sucesso (ou carrinho não encontrado)""";
+        """Status 200: Registro excluído com sucesso (ou carrinho não encontrado)""";
         # Preparação: Garante que o usuário tenha um carrinho ativo para cancelar
         headers = {'Authorization': auth_token};
         payload = {
@@ -32,7 +32,7 @@ class TestCancelPurchase:
         assert "sucesso" in response.json()["message"] or "Não foi encontrado" in response.json()["message"];
 
     def test_cancel_purchase_without_token_401(self):
-        """Cenário 401: Tentativa de cancelar compra sem autenticação"""
+        """Status 401: Tentativa de cancelar compra sem autenticação"""
         # Execution without the Authorization header using the class URL.
         response = requests.delete(self.url_cancelar);
 

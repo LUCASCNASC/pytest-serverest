@@ -15,7 +15,7 @@ class TestDeleteProductById:
         TestDeleteProductById.url_carrinhos = f"{base_url}/carrinhos";
 
     def test_delete_product_with_sucess_200(self, auth_token):
-        """Cenário 200: Registro excluído com sucesso""";
+        """Status 200: Registro excluído com sucesso""";
         # Preparation: Create a product to ensure a valid ID.
         headers = {'Authorization': auth_token};
         payload = {
@@ -34,7 +34,7 @@ class TestDeleteProductById:
         assert response.json()["message"] == "Registro excluído com sucesso";
 
     def test_delete_product_linked_to_cart_400(self, auth_token, produto_id):
-        """Cenário 400: Não é permitido excluir produto que faz parte de carrinho""";
+        """Status 400: Não é permitido excluir produto que faz parte de carrinho""";
         headers = {'Authorization': auth_token};
         
         # Preparation: Place the product in a cart (using the class URL)
@@ -50,7 +50,7 @@ class TestDeleteProductById:
         assert response.json()["message"] == "Não é permitido excluir produto que faz parte de carrinho";
 
     def test_delete_product_without_token_401(self):
-        """Cenário 401: Token ausente ou inválido""";
+        """Status 401: Token ausente ou inválido""";
             # Execution sem header de autorização
         response = requests.delete(f"{self.url_base}/id_qualquer");
         
@@ -58,7 +58,7 @@ class TestDeleteProductById:
         assert "Token de acesso ausente" in response.json()["message"];
 
     def test_delete_product_without_permission_admin_403(self, base_url):
-        """Cenário 403: Rota exclusiva para administradores""";
+        """Status 403: Rota exclusiva para administradores""";
         # 1. Create and log in with a regular user (admin: false)
         email_comum = fake.email();
         url_usuarios = f"{base_url}/usuarios";

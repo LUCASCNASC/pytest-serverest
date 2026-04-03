@@ -15,7 +15,7 @@ class TestUpdateProductById:
         TestUpdateProductById.url_base = f"{base_url}/produtos";
 
     def test_change_product_with_sucess_200(self, auth_token, produto_id):
-        """Cenário 200: Registro alterado com sucesso""";
+        """Status 200: Registro alterado com sucesso""";
         headers = {'Authorization': auth_token};
         payload = {
             "nome": f"Editado {fake.word()} {fake.random_number()}",
@@ -30,7 +30,7 @@ class TestUpdateProductById:
         assert response.json()["message"] == "Registro alterado com sucesso";
 
     def test_register_product_via_put_201(self, auth_token):
-        """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)""";
+        """Status 201: Cadastro realizado com sucesso (ID não encontrado)""";
         headers = {'Authorization': auth_token};
         id_inexistente = f"novo_prod_{fake.random_number()}";
         payload = {
@@ -46,7 +46,7 @@ class TestUpdateProductById:
         assert "_id" in response.json();
 
     def test_put_name_duplicate_400(self, auth_token, produto_id):
-        """Cenário 400: Já existe produto com esse nome""";
+        """Status 400: Já existe produto com esse nome""";
         headers = {'Authorization': auth_token};
         
         # Create a second product 'B' to try and steal its name.
@@ -68,7 +68,7 @@ class TestUpdateProductById:
         assert response.json()["message"] == "Já existe produto com esse nome";
 
     def test_put_token_empty_401(self):
-        """Cenário 401: Token ausente ou inválido""";
+        """Status 401: Token ausente ou inválido""";
         # Request sent without authorization header using self.url_base.
         response = requests.put(f"{self.url_base}/qualquer_id", json={});
         
@@ -76,7 +76,7 @@ class TestUpdateProductById:
         assert "Token de acesso ausente" in response.json()["message"];
 
     def test_put_without_permission_admin_403(self, base_url):
-        """Cenário 403: Rota exclusiva para administradores""";
+        """Status 403: Rota exclusiva para administradores""";
         # 1. Criar e logar com usuário comum (admin: false)
         email_comum = fake.email();
         url_usuarios = f"{base_url}/usuarios";

@@ -15,7 +15,7 @@ class TestUpdateUserById:
         TestUpdateUserById.url_base = f"{base_url}/usuarios"
 
     def test_put_change_user_with_success_200(self):
-        """Cenário 200: Registro alterado com sucesso"""
+        """Status 200: Registro alterado com sucesso"""
         # Create a user to ensure the ID exists.
         payload_create = {
             "nome": fake.name(),
@@ -40,7 +40,7 @@ class TestUpdateUserById:
         assert response.json()["message"] == "Registro alterado com sucesso"
 
     def test_put_register_new_user_201(self):
-        """Cenário 201: Cadastro realizado com sucesso (ID não encontrado)"""
+        """Status 201: Cadastro realizado com sucesso (ID não encontrado)"""
         # Generate a random ID that does not exist in the system.
         id_inexistente = f"novo_{fake.uuid4()[:8]}"
         
@@ -58,7 +58,7 @@ class TestUpdateUserById:
         assert "_id" in response.json()
 
     def test_put_email_duplicate_400(self):
-        """Cenário 400: Este email já está sendo usado"""
+        """Status 400: Este email já está sendo usado"""
         # Ensure a user 'A' exists in the system
         email_em_uso = fake.email()
         requests.post(self.url_base, json={

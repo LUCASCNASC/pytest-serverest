@@ -12,7 +12,7 @@ class TestSearchProductById:
         TestSearchProductById.url_base = f"{base_url}/produtos";
 
     def test_search_product_by_id_with_sucess_200(self, auth_token):
-        """Cenário 200: Produto encontrado com sucesso""";
+        """Status 200: Produto encontrado com sucesso""";
         # Add a random number to the name to avoid duplicate conflicts.
         nome_dinamico = f"Produto Teste {fake.random_number(digits=5)}";
         payload = {
@@ -39,7 +39,7 @@ class TestSearchProductById:
         assert response.json()["_id"] == produto_id;
 
     def test_search_product_with_id_inexistent_400(self):
-        """Cenário 400: Produto não encontrado""";
+        """Status 400: Produto não encontrado""";
         # Using an ID that follows the format pattern but does not exist in the database.
         id_inexistente = "nonExistent12345";
 

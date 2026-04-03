@@ -12,7 +12,7 @@ class TestSearchCartById:
         TestSearchCartById.url_base = f"{base_url}/carrinhos";
 
     def test_search_cart_by_id_with_sucess_200(self, auth_token, produto_id):
-        """Cenário 200: Carrinho encontrado com sucesso""";
+        """Status 200: Carrinho encontrado com sucesso""";
         # Preparation: Create a cart to ensure we have a valid ID.
         payload = {
             "produtos": [{"idProduto": produto_id, "quantidade": 1}]
@@ -34,7 +34,7 @@ class TestSearchCartById:
         assert "precoTotal" in response.json();
 
     def test_search_cart_by_id_inexistent_400(self):
-        """Cenário 400: Carrinho não encontrado"""
+        """Status 400: Carrinho não encontrado"""
         # Using an ID with a valid format, but which does not exist in the database.
         id_inexistente = "nonExistent12345";
 
