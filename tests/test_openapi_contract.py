@@ -58,5 +58,7 @@ def test_spec_documents_core_routes_and_operations() -> None:
         "/carrinhos/cancelar-compra": {"delete"},
     }
 
-    for path, operations in expected.items():
-        assert operations <= set(paths[path])
+    documented_operations = {
+        path: set(operations) for path, operations in paths.items()
+    }
+    assert documented_operations == expected

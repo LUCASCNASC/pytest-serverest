@@ -25,6 +25,12 @@ Execute toda a suíte:
 pytest
 ```
 
+Para ver cada método e rota como um caso separado no relatório:
+
+```powershell
+pytest -v tests/test_api_routes.py
+```
+
 Execute somente as verificações locais da especificação:
 
 ```powershell
@@ -41,3 +47,10 @@ pytest
 
 Os fluxos de integração criam usuários e produtos com identificadores únicos e
 tentam removê-los ao final. Não use credenciais reais nesses testes.
+
+A suíte possui um caso positivo nomeado por operação documentada no OpenAPI:
+login; listagem e CRUD de usuários e produtos; listagem, criação e consulta de
+carrinhos; e cancelamento e conclusão de compras. Os casos estão em
+`tests/test_api_routes.py`; use `pytest -v` para auditar os nomes e resultados
+individualmente. Verificações do arquivo OpenAPI ficam separadas em
+`tests/test_openapi_contract.py`.
