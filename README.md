@@ -54,3 +54,10 @@ carrinhos; e cancelamento e conclusão de compras. Os casos estão em
 `tests/test_api_routes.py`; use `pytest -v` para auditar os nomes e resultados
 individualmente. Verificações do arquivo OpenAPI ficam separadas em
 `tests/test_openapi_contract.py`.
+
+O mesmo arquivo inclui cenários negativos para todos os status não-2xx
+documentados nas operações: credenciais inválidas, duplicidades, IDs
+inexistentes, restrições de carrinho, estoque insuficiente, token ausente e
+acesso sem perfil de administrador. Os endpoints de listagem (`GET` das
+coleções de usuários, produtos e carrinhos) só documentam resposta `200`, então
+não há status de erro documentado para eles nessa especificação.
