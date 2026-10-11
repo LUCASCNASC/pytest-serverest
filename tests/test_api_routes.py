@@ -406,6 +406,7 @@ def test_delete_carrinhos_concluir_compra_completes_purchase(
     cart: dict[str, str],
     customer: dict[str, str],
 ) -> None:
+    assert cart["_id"]
     response = api.delete(
         f"{base_url}/carrinhos/concluir-compra",
         headers={"Authorization": customer["token"]},
@@ -422,6 +423,7 @@ def test_delete_carrinhos_cancelar_compra_cancels_purchase(
     cart: dict[str, str],
     customer: dict[str, str],
 ) -> None:
+    assert cart["_id"]
     response = api.delete(
         f"{base_url}/carrinhos/cancelar-compra",
         headers={"Authorization": customer["token"]},
@@ -430,3 +432,375 @@ def test_delete_carrinhos_cancelar_compra_cancels_purchase(
 
     assert response.status_code == 200, response.text
     assert "excluído com sucesso" in response_json(response)["message"]
+
+
+def test_post_login_rejects_unknown_credentials(
+    api: requests.Session, base_url: str
+) -> None:
+    response = api.post(
+        f"{base_url}/login",
+        json={
+            "email": f"pytest-unknown-{uuid4().hex}@example.com",
+            "password": "invalid-password",
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 401, response.text
+    assert response_json(response)["message"] == "Email e/ou senha inválidos"
+
+
+def test_post_usuarios_rejects_duplicate_email(
+    api: requests.Session, base_url: str, regular_user: dict[str, str]
+) -> None:
+    response = api.post(
+        f"{base_url}/usuarios",
+        json={
+            "nome": "Duplicate User",
+            "email": regular_user["email"],
+            "password": regular_user["password"],
+            "administrador": regular_user["administrador"],
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == "Este email já está sendo usado"
+
+
+def test_get_usuario_by_id_returns_400_for_unknown_user(
+    api: requests.Session, base_url: str
+) -> None:
+    response = api.get(
+        f"{base_url}/usuarios/{uuid4().hex[:16]}",
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == "Usuário não encontrado"
+
+
+def test_delete_usuario_by_id_rejects_user_with_cart(
+    api: requests.Session,
+    base_url: str,
+    customer: dict[str, str],
+    cart: dict[str, str],
+) -> None:
+    assert cart["_id"]
+    response = api.delete(
+        f"{base_url}/usuarios/{customer['_id']}", timeout=REQUEST_TIMEOUT
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == (
+        "Não é permitido excluir usuário com carrinho cadastrado"
+    )
+
+
+def test_put_usuario_by_id_rejects_duplicate_email(
+    api: requests.Session, base_url: str, regular_user: dict[str, str]
+) -> None:
+    other_user = create_user(api, base_url)
+    try:
+        response = api.put(
+            f"{base_url}/usuarios/{regular_user['_id']}",
+            json={
+                "nome": regular_user["nome"],
+                "email": other_user["email"],
+                "password": regular_user["password"],
+                "administrador": regular_user["administrador"],
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+
+        assert response.status_code == 400, response.text
+        assert response_json(response)["message"] == (
+            "Este email já está sendo usado"
+        )
+    finally:
+        deleted = api.delete(
+            f"{base_url}/usuarios/{other_user['_id']}",
+            timeout=REQUEST_TIMEOUT,
+        )
+        assert deleted.status_code == 200, deleted.text
+
+
+def test_get_produto_by_id_returns_400_for_unknown_product(
+    api: requests.Session, base_url: str
+) -> None:
+    response = api.get(
+        f"{base_url}/produtos/{uuid4().hex[:16]}",
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == "Produto não encontrado"
+
+
+def test_post_produtos_rejects_duplicate_name(
+    api: requests.Session,
+    base_url: str,
+    admin: dict[str, str],
+    product: dict[str, str],
+) -> None:
+    response = api.post(
+        f"{base_url}/produtos",
+        headers={"Authorization": admin["token"]},
+        json={
+            "nome": product["nome"],
+            "preco": product["preco"],
+            "descricao": product["descricao"],
+            "quantidade": product["quantidade"],
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == "Já existe produto com esse nome"
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "operation"),
+    [
+        ("POST", "/produtos", "create"),
+        ("PUT", "/produtos/{product_id}", "update"),
+        ("DELETE", "/produtos/{product_id}", "delete"),
+    ],
+)
+@pytest.mark.parametrize(
+    ("authorization", "expected_status"),
+    [("missing", 401), ("customer", 403)],
+    ids=["missing-token", "non-admin"],
+)
+def test_admin_product_routes_reject_unauthorized_access(
+    api: requests.Session,
+    base_url: str,
+    product: dict[str, str],
+    customer: dict[str, str],
+    method: str,
+    path: str,
+    operation: str,
+    authorization: str,
+    expected_status: int,
+) -> None:
+    request_path = path.format(product_id=product["_id"])
+    headers = (
+        {"Authorization": customer["token"]}
+        if authorization == "customer"
+        else {}
+    )
+    kwargs: dict[str, object] = {
+        "headers": headers,
+        "timeout": REQUEST_TIMEOUT,
+    }
+    if operation in {"create", "update"}:
+        kwargs["json"] = {
+            "nome": product["nome"],
+            "preco": product["preco"],
+            "descricao": product["descricao"],
+            "quantidade": product["quantidade"],
+        }
+
+    response = api.request(
+        method, f"{base_url}{request_path}", **kwargs
+    )
+
+    assert response.status_code == expected_status, response.text
+    expected_message = (
+        "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
+        if expected_status == 401
+        else "Rota exclusiva para administradores"
+    )
+    assert response_json(response)["message"] == expected_message
+
+
+def test_delete_produto_by_id_rejects_product_in_cart(
+    api: requests.Session,
+    base_url: str,
+    admin: dict[str, str],
+    product: dict[str, str],
+    cart: dict[str, str],
+) -> None:
+    assert cart["_id"]
+    response = api.delete(
+        f"{base_url}/produtos/{product['_id']}",
+        headers={"Authorization": admin["token"]},
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == (
+        "Não é permitido excluir produto que faz parte de carrinho"
+    )
+
+
+def test_put_produto_by_id_rejects_duplicate_name(
+    api: requests.Session,
+    base_url: str,
+    admin: dict[str, str],
+    product: dict[str, str],
+) -> None:
+    duplicate = {
+        "nome": f"pytest-duplicate-product-{uuid4().hex}",
+        "preco": 150,
+        "descricao": "Produto duplicado",
+        "quantidade": 5,
+    }
+    created = api.post(
+        f"{base_url}/produtos",
+        headers={"Authorization": admin["token"]},
+        json=duplicate,
+        timeout=REQUEST_TIMEOUT,
+    )
+    assert created.status_code == 201, created.text
+    duplicate_id = response_json(created)["_id"]
+
+    try:
+        response = api.put(
+            f"{base_url}/produtos/{product['_id']}",
+            headers={"Authorization": admin["token"]},
+            json={
+                **duplicate,
+                "nome": duplicate["nome"],
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+
+        assert response.status_code == 400, response.text
+        assert response_json(response)["message"] == (
+            "Já existe produto com esse nome"
+        )
+    finally:
+        deleted = api.delete(
+            f"{base_url}/produtos/{duplicate_id}",
+            headers={"Authorization": admin["token"]},
+            timeout=REQUEST_TIMEOUT,
+        )
+        assert deleted.status_code == 200, deleted.text
+
+
+@pytest.mark.parametrize(
+    ("scenario", "products", "expected_message"),
+    [
+        (
+            "unknown-product",
+            [{"idProduto": "USE_MISSING_PRODUCT_ID", "quantidade": 1}],
+            "Produto não encontrado",
+        ),
+        (
+            "duplicate-product-in-request",
+            [
+                {"idProduto": "use-fixture-product", "quantidade": 1},
+                {"idProduto": "use-fixture-product", "quantidade": 1},
+            ],
+            "Não é permitido possuir produto duplicado",
+        ),
+        (
+            "insufficient-stock",
+            [{"idProduto": "use-fixture-product", "quantidade": 11}],
+            "Produto não possui quantidade suficiente",
+        ),
+    ],
+)
+def test_post_carrinhos_rejects_invalid_products(
+    api: requests.Session,
+    base_url: str,
+    customer: dict[str, str],
+    product: dict[str, str],
+    scenario: str,
+    products: list[dict[str, object]],
+    expected_message: str,
+) -> None:
+    request_products = [
+        {
+            **item,
+            "idProduto": (
+                product["_id"]
+                if item["idProduto"] == "use-fixture-product"
+                else f"pytest-missing-{uuid4().hex}"
+            ),
+        }
+        for item in products
+    ]
+    response = api.post(
+        f"{base_url}/carrinhos",
+        headers={"Authorization": customer["token"]},
+        json={"produtos": request_products},
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, f"{scenario}: {response.text}"
+    assert response_json(response)["message"] == expected_message
+
+
+def test_post_carrinhos_rejects_second_cart_for_user(
+    api: requests.Session,
+    base_url: str,
+    customer: dict[str, str],
+    product: dict[str, str],
+    cart: dict[str, str],
+) -> None:
+    assert cart["_id"]
+    response = api.post(
+        f"{base_url}/carrinhos",
+        headers={"Authorization": customer["token"]},
+        json={
+            "produtos": [{"idProduto": product["_id"], "quantidade": 1}]
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == (
+        "Não é permitido ter mais de 1 carrinho"
+    )
+
+
+def test_post_carrinhos_requires_authorization(
+    api: requests.Session, base_url: str, product: dict[str, str]
+) -> None:
+    response = api.post(
+        f"{base_url}/carrinhos",
+        json={"produtos": [{"idProduto": product["_id"], "quantidade": 1}]},
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 401, response.text
+    assert response_json(response)["message"] == (
+        "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
+    )
+
+
+def test_get_carrinho_by_id_returns_400_for_unknown_cart(
+    api: requests.Session, base_url: str
+) -> None:
+    response = api.get(
+        f"{base_url}/carrinhos/{uuid4().hex[:16]}",
+        timeout=REQUEST_TIMEOUT,
+    )
+
+    assert response.status_code == 400, response.text
+    assert response_json(response)["message"] == "Carrinho não encontrado"
+
+
+@pytest.mark.parametrize(
+    ("path", "operation"),
+    [
+        ("/carrinhos/concluir-compra", "conclude"),
+        ("/carrinhos/cancelar-compra", "cancel"),
+    ],
+)
+def test_delete_cart_actions_require_authorization(
+    api: requests.Session,
+    base_url: str,
+    path: str,
+    operation: str,
+) -> None:
+    response = api.delete(
+        f"{base_url}{path}", timeout=REQUEST_TIMEOUT
+    )
+
+    assert response.status_code == 401, f"{operation}: {response.text}"
+    assert response_json(response)["message"] == (
+        "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
+    )
