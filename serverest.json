@@ -39,7 +39,7 @@
                     "Login"
                 ],
                 "summary": "Log in",
-                "description": "The token returned in authorization lasts 600 seconds (10 minutes). If it is expired you will receive status code 401 (Unauthorized).\n",
+                "description": "The token returned in authorization lasts 600 seconds (10 minutes). If it is expired you will receivestatus code 401 (Unauthorized).\n",
                 "requestBody": {
                     "$ref": "#/components/requestBodies/requestBodyLogin"
                 },
