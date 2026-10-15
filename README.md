@@ -61,3 +61,10 @@ inexistentes, restrições de carrinho, estoque insuficiente, token ausente e
 acesso sem perfil de administrador. Os endpoints de listagem (`GET` das
 coleções de usuários, produtos e carrinhos) só documentam resposta `200`, então
 não há status de erro documentado para eles nessa especificação.
+
+Os cenários são marcados com método, rota e status esperado. Um teste de
+cobertura compara essas marcações com todas as respostas documentadas no
+OpenAPI e falha se um status não tiver cenário associado ou se houver cobertura
+marcada para uma resposta que não consta na especificação. Execute a suíte
+completa (`pytest`) para rodar essa auditoria. Os `PUT` de usuário e produto
+também verificam o `201` documentado quando o ID ainda não existe.

@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from typing import Any
 from uuid import uuid4
 
 import pytest
@@ -145,6 +146,7 @@ def cart(
         assert cancelled.status_code == 200, cancelled.text
 
 
+@pytest.mark.api_coverage(method="POST", path="/login", statuses=(200,))
 def test_post_login_returns_authorization_token(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -154,6 +156,7 @@ def test_post_login_returns_authorization_token(
     assert body["authorization"]
 
 
+@pytest.mark.api_coverage(method="GET", path="/usuarios", statuses=(200,))
 def test_get_usuarios_lists_registered_user(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -169,6 +172,7 @@ def test_get_usuarios_lists_registered_user(
     assert any(user["_id"] == regular_user["_id"] for user in body["usuarios"])
 
 
+@pytest.mark.api_coverage(method="POST", path="/usuarios", statuses=(201,))
 def test_post_usuarios_creates_user(
     api: requests.Session, base_url: str
 ) -> None:
@@ -178,20 +182,26 @@ def test_post_usuarios_creates_user(
         "password": "pytest-password",
         "administrador": "false",
     }
-    response = api.post(
-        f"{base_url}/usuarios", json=user, timeout=REQUEST_TIMEOUT
-    )
-    assert response.status_code == 201, response.text
-    body = response_json(response)
-    assert body["message"] == "Cadastro realizado com sucesso"
-    assert body["_id"]
+    user_id = None
+    try:
+        response = api.post(
+            f"{base_url}/usuarios", json=user, timeout=REQUEST_TIMEOUT
+        )
+        assert response.status_code == 201, response.text
+        body = response_json(response)
+        user_id = body["_id"]
+        assert body["message"] == "Cadastro realizado com sucesso"
+    finally:
+        if user_id:
+            deleted = api.delete(
+                f"{base_url}/usuarios/{user_id}", timeout=REQUEST_TIMEOUT
+            )
+            assert deleted.status_code == 200, deleted.text
 
-    deleted = api.delete(
-        f"{base_url}/usuarios/{body['_id']}", timeout=REQUEST_TIMEOUT
-    )
-    assert deleted.status_code == 200, deleted.text
 
-
+@pytest.mark.api_coverage(
+    method="GET", path="/usuarios/{_id}", statuses=(200, 400)
+)
 def test_get_usuario_by_id_returns_registered_user(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -205,6 +215,7 @@ def test_get_usuario_by_id_returns_registered_user(
     assert body["email"] == regular_user["email"]
 
 
+@pytest.mark.api_coverage(method="PUT", path="/usuarios/{_id}", statuses=(200,))
 def test_put_usuario_by_id_updates_registered_user(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -230,6 +241,9 @@ def test_put_usuario_by_id_updates_registered_user(
     assert response_json(details)["nome"] == updated_name
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/usuarios/{_id}", statuses=(200,)
+)
 def test_delete_usuario_by_id_removes_registered_user(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -241,6 +255,7 @@ def test_delete_usuario_by_id_removes_registered_user(
     assert "excluído com sucesso" in response_json(response)["message"]
 
 
+@pytest.mark.api_coverage(method="GET", path="/produtos", statuses=(200,))
 def test_get_produtos_lists_registered_products(
     api: requests.Session, base_url: str, product: dict[str, str]
 ) -> None:
@@ -256,6 +271,7 @@ def test_get_produtos_lists_registered_products(
     assert any(item["_id"] == product["_id"] for item in body["produtos"])
 
 
+@pytest.mark.api_coverage(method="POST", path="/produtos", statuses=(201,))
 def test_post_produtos_creates_product(
     api: requests.Session, base_url: str, admin: dict[str, str]
 ) -> None:
@@ -265,26 +281,32 @@ def test_post_produtos_creates_product(
         "descricao": "Produto de teste",
         "quantidade": 5,
     }
-    response = api.post(
-        f"{base_url}/produtos",
-        headers={"Authorization": admin["token"]},
-        json=product_data,
-        timeout=REQUEST_TIMEOUT,
-    )
+    product_id = None
+    try:
+        response = api.post(
+            f"{base_url}/produtos",
+            headers={"Authorization": admin["token"]},
+            json=product_data,
+            timeout=REQUEST_TIMEOUT,
+        )
 
-    assert response.status_code == 201, response.text
-    body = response_json(response)
-    assert body["message"] == "Cadastro realizado com sucesso"
-    assert body["_id"]
+        assert response.status_code == 201, response.text
+        body = response_json(response)
+        product_id = body["_id"]
+        assert body["message"] == "Cadastro realizado com sucesso"
+    finally:
+        if product_id:
+            deleted = api.delete(
+                f"{base_url}/produtos/{product_id}",
+                headers={"Authorization": admin["token"]},
+                timeout=REQUEST_TIMEOUT,
+            )
+            assert deleted.status_code == 200, deleted.text
 
-    deleted = api.delete(
-        f"{base_url}/produtos/{body['_id']}",
-        headers={"Authorization": admin["token"]},
-        timeout=REQUEST_TIMEOUT,
-    )
-    assert deleted.status_code == 200, deleted.text
 
-
+@pytest.mark.api_coverage(
+    method="GET", path="/produtos/{_id}", statuses=(200, 400)
+)
 def test_get_produto_by_id_returns_registered_product(
     api: requests.Session, base_url: str, product: dict[str, str]
 ) -> None:
@@ -298,6 +320,9 @@ def test_get_produto_by_id_returns_registered_product(
     assert body["nome"] == product["nome"]
 
 
+@pytest.mark.api_coverage(
+    method="PUT", path="/produtos/{_id}", statuses=(200,)
+)
 def test_put_produto_by_id_updates_registered_product(
     api: requests.Session,
     base_url: str,
@@ -327,6 +352,9 @@ def test_put_produto_by_id_updates_registered_product(
     assert response_json(details)["nome"] == updated_name
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/produtos/{_id}", statuses=(200,)
+)
 def test_delete_produto_by_id_removes_registered_product(
     api: requests.Session,
     base_url: str,
@@ -343,6 +371,7 @@ def test_delete_produto_by_id_removes_registered_product(
     assert "excluído com sucesso" in response_json(response)["message"]
 
 
+@pytest.mark.api_coverage(method="GET", path="/carrinhos", statuses=(200,))
 def test_get_carrinhos_lists_registered_cart(
     api: requests.Session, base_url: str, cart: dict[str, str]
 ) -> None:
@@ -354,6 +383,7 @@ def test_get_carrinhos_lists_registered_cart(
     assert any(item["_id"] == cart["_id"] for item in body["carrinhos"])
 
 
+@pytest.mark.api_coverage(method="POST", path="/carrinhos", statuses=(201,))
 def test_post_carrinhos_creates_cart(
     api: requests.Session,
     base_url: str,
@@ -368,20 +398,26 @@ def test_post_carrinhos_creates_cart(
         },
         timeout=REQUEST_TIMEOUT,
     )
+    cart_created = response.status_code == 201
 
-    assert response.status_code == 201, response.text
-    body = response_json(response)
-    assert body["message"] == "Cadastro realizado com sucesso"
-    assert body["_id"]
+    try:
+        assert response.status_code == 201, response.text
+        body = response_json(response)
+        assert body["message"] == "Cadastro realizado com sucesso"
+        assert body["_id"]
+    finally:
+        if cart_created:
+            cancelled = api.delete(
+                f"{base_url}/carrinhos/cancelar-compra",
+                headers={"Authorization": customer["token"]},
+                timeout=REQUEST_TIMEOUT,
+            )
+            assert cancelled.status_code == 200, cancelled.text
 
-    cancelled = api.delete(
-        f"{base_url}/carrinhos/cancelar-compra",
-        headers={"Authorization": customer["token"]},
-        timeout=REQUEST_TIMEOUT,
-    )
-    assert cancelled.status_code == 200, cancelled.text
 
-
+@pytest.mark.api_coverage(
+    method="GET", path="/carrinhos/{_id}", statuses=(200, 400)
+)
 def test_get_carrinho_by_id_returns_registered_cart(
     api: requests.Session,
     base_url: str,
@@ -400,6 +436,9 @@ def test_get_carrinho_by_id_returns_registered_cart(
     assert body["produtos"][0]["idProduto"] == product["_id"]
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/carrinhos/concluir-compra", statuses=(200,)
+)
 def test_delete_carrinhos_concluir_compra_completes_purchase(
     api: requests.Session,
     base_url: str,
@@ -417,6 +456,9 @@ def test_delete_carrinhos_concluir_compra_completes_purchase(
     assert "excluído com sucesso" in response_json(response)["message"]
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/carrinhos/cancelar-compra", statuses=(200,)
+)
 def test_delete_carrinhos_cancelar_compra_cancels_purchase(
     api: requests.Session,
     base_url: str,
@@ -434,6 +476,7 @@ def test_delete_carrinhos_cancelar_compra_cancels_purchase(
     assert "excluído com sucesso" in response_json(response)["message"]
 
 
+@pytest.mark.api_coverage(method="POST", path="/login", statuses=(401,))
 def test_post_login_rejects_unknown_credentials(
     api: requests.Session, base_url: str
 ) -> None:
@@ -450,6 +493,7 @@ def test_post_login_rejects_unknown_credentials(
     assert response_json(response)["message"] == "Email e/ou senha inválidos"
 
 
+@pytest.mark.api_coverage(method="POST", path="/usuarios", statuses=(400,))
 def test_post_usuarios_rejects_duplicate_email(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -468,6 +512,9 @@ def test_post_usuarios_rejects_duplicate_email(
     assert response_json(response)["message"] == "Este email já está sendo usado"
 
 
+@pytest.mark.api_coverage(
+    method="GET", path="/usuarios/{_id}", statuses=(400,)
+)
 def test_get_usuario_by_id_returns_400_for_unknown_user(
     api: requests.Session, base_url: str
 ) -> None:
@@ -480,6 +527,9 @@ def test_get_usuario_by_id_returns_400_for_unknown_user(
     assert response_json(response)["message"] == "Usuário não encontrado"
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/usuarios/{_id}", statuses=(400,)
+)
 def test_delete_usuario_by_id_rejects_user_with_cart(
     api: requests.Session,
     base_url: str,
@@ -497,6 +547,9 @@ def test_delete_usuario_by_id_rejects_user_with_cart(
     )
 
 
+@pytest.mark.api_coverage(
+    method="PUT", path="/usuarios/{_id}", statuses=(400,)
+)
 def test_put_usuario_by_id_rejects_duplicate_email(
     api: requests.Session, base_url: str, regular_user: dict[str, str]
 ) -> None:
@@ -525,6 +578,9 @@ def test_put_usuario_by_id_rejects_duplicate_email(
         assert deleted.status_code == 200, deleted.text
 
 
+@pytest.mark.api_coverage(
+    method="GET", path="/produtos/{_id}", statuses=(400,)
+)
 def test_get_produto_by_id_returns_400_for_unknown_product(
     api: requests.Session, base_url: str
 ) -> None:
@@ -537,6 +593,9 @@ def test_get_produto_by_id_returns_400_for_unknown_product(
     assert response_json(response)["message"] == "Produto não encontrado"
 
 
+@pytest.mark.api_coverage(
+    method="POST", path="/produtos", statuses=(400,)
+)
 def test_post_produtos_rejects_duplicate_name(
     api: requests.Session,
     base_url: str,
@@ -571,6 +630,15 @@ def test_post_produtos_rejects_duplicate_name(
     ("authorization", "expected_status"),
     [("missing", 401), ("customer", 403)],
     ids=["missing-token", "non-admin"],
+)
+@pytest.mark.api_coverage(
+    method="POST", path="/produtos", statuses=(401, 403)
+)
+@pytest.mark.api_coverage(
+    method="PUT", path="/produtos/{_id}", statuses=(401, 403)
+)
+@pytest.mark.api_coverage(
+    method="DELETE", path="/produtos/{_id}", statuses=(401, 403)
 )
 def test_admin_product_routes_reject_unauthorized_access(
     api: requests.Session,
@@ -614,6 +682,9 @@ def test_admin_product_routes_reject_unauthorized_access(
     assert response_json(response)["message"] == expected_message
 
 
+@pytest.mark.api_coverage(
+    method="DELETE", path="/produtos/{_id}", statuses=(400,)
+)
 def test_delete_produto_by_id_rejects_product_in_cart(
     api: requests.Session,
     base_url: str,
@@ -634,6 +705,9 @@ def test_delete_produto_by_id_rejects_product_in_cart(
     )
 
 
+@pytest.mark.api_coverage(
+    method="PUT", path="/produtos/{_id}", statuses=(400,)
+)
 def test_put_produto_by_id_rejects_duplicate_name(
     api: requests.Session,
     base_url: str,
@@ -702,6 +776,9 @@ def test_put_produto_by_id_rejects_duplicate_name(
         ),
     ],
 )
+@pytest.mark.api_coverage(
+    method="POST", path="/carrinhos", statuses=(400,)
+)
 def test_post_carrinhos_rejects_invalid_products(
     api: requests.Session,
     base_url: str,
@@ -733,6 +810,9 @@ def test_post_carrinhos_rejects_invalid_products(
     assert response_json(response)["message"] == expected_message
 
 
+@pytest.mark.api_coverage(
+    method="POST", path="/carrinhos", statuses=(400,)
+)
 def test_post_carrinhos_rejects_second_cart_for_user(
     api: requests.Session,
     base_url: str,
@@ -756,6 +836,9 @@ def test_post_carrinhos_rejects_second_cart_for_user(
     )
 
 
+@pytest.mark.api_coverage(
+    method="POST", path="/carrinhos", statuses=(401,)
+)
 def test_post_carrinhos_requires_authorization(
     api: requests.Session, base_url: str, product: dict[str, str]
 ) -> None:
@@ -771,6 +854,9 @@ def test_post_carrinhos_requires_authorization(
     )
 
 
+@pytest.mark.api_coverage(
+    method="GET", path="/carrinhos/{_id}", statuses=(400,)
+)
 def test_get_carrinho_by_id_returns_400_for_unknown_cart(
     api: requests.Session, base_url: str
 ) -> None:
@@ -790,6 +876,16 @@ def test_get_carrinho_by_id_returns_400_for_unknown_cart(
         ("/carrinhos/cancelar-compra", "cancel"),
     ],
 )
+@pytest.mark.api_coverage(
+    method="DELETE",
+    path="/carrinhos/concluir-compra",
+    statuses=(401,),
+)
+@pytest.mark.api_coverage(
+    method="DELETE",
+    path="/carrinhos/cancelar-compra",
+    statuses=(401,),
+)
 def test_delete_cart_actions_require_authorization(
     api: requests.Session,
     base_url: str,
@@ -804,3 +900,107 @@ def test_delete_cart_actions_require_authorization(
     assert response_json(response)["message"] == (
         "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais"
     )
+
+
+@pytest.mark.api_coverage(
+    method="PUT", path="/usuarios/{_id}", statuses=(201,)
+)
+def test_put_usuario_by_id_creates_user_when_id_is_unknown(
+    api: requests.Session, base_url: str
+) -> None:
+    user = {
+        "nome": "Pytest User Created By Put",
+        "email": f"pytest-put-user-{uuid4().hex}@example.com",
+        "password": "pytest-password",
+        "administrador": "false",
+    }
+    created_id = uuid4().hex[:16]
+    response = api.put(
+        f"{base_url}/usuarios/{created_id}",
+        json=user,
+        timeout=REQUEST_TIMEOUT,
+    )
+    actual_id = None
+
+    try:
+        assert response.status_code == 201, response.text
+        body = response_json(response)
+        actual_id = body["_id"]
+        assert body["message"] == "Cadastro realizado com sucesso"
+        assert actual_id
+
+        details = api.get(
+            f"{base_url}/usuarios/{actual_id}", timeout=REQUEST_TIMEOUT
+        )
+        assert details.status_code == 200, details.text
+        assert response_json(details)["email"] == user["email"]
+    finally:
+        if actual_id:
+            deleted = api.delete(
+                f"{base_url}/usuarios/{actual_id}", timeout=REQUEST_TIMEOUT
+            )
+            assert deleted.status_code == 200, deleted.text
+
+
+@pytest.mark.api_coverage(
+    method="PUT",
+    path="/produtos/{_id}",
+    statuses=(201,),
+)
+def test_put_produto_by_id_creates_product_when_id_is_unknown(
+    api: requests.Session, base_url: str, admin: dict[str, str]
+) -> None:
+    product_data = {
+        "nome": f"pytest-put-product-{uuid4().hex}",
+        "preco": 300,
+        "descricao": "Produto criado por PUT",
+        "quantidade": 4,
+    }
+    requested_id = uuid4().hex[:16]
+    response = api.put(
+        f"{base_url}/produtos/{requested_id}",
+        headers={"Authorization": admin["token"]},
+        json=product_data,
+        timeout=REQUEST_TIMEOUT,
+    )
+    actual_id = None
+
+    try:
+        assert response.status_code == 201, response.text
+        body = response_json(response)
+        actual_id = body["_id"]
+        assert body["message"] == "Cadastro realizado com sucesso"
+        assert actual_id
+
+        details = api.get(
+            f"{base_url}/produtos/{actual_id}", timeout=REQUEST_TIMEOUT
+        )
+        assert details.status_code == 200, details.text
+        assert response_json(details)["nome"] == product_data["nome"]
+    finally:
+        if actual_id:
+            deleted = api.delete(
+                f"{base_url}/produtos/{actual_id}",
+                headers={"Authorization": admin["token"]},
+                timeout=REQUEST_TIMEOUT,
+            )
+            assert deleted.status_code == 200, deleted.text
+
+
+def test_openapi_response_codes_have_test_scenarios(
+    openapi_spec: dict[str, Any],
+    api_route_coverage: set[tuple[str, str, int]],
+) -> None:
+    documented = {
+        (method.upper(), path, int(status))
+        for path, operations in openapi_spec["paths"].items()
+        for method, operation in operations.items()
+        if method.lower() in {"get", "post", "put", "delete", "patch"}
+        for status in operation["responses"]
+    }
+
+    missing = documented - api_route_coverage
+    undocumented = api_route_coverage - documented
+
+    assert not missing, f"Documented responses without a test scenario: {sorted(missing)}"
+    assert not undocumented, f"Test scenarios not documented in OpenAPI: {sorted(undocumented)}"

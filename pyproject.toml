@@ -1,3 +1,6 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+markers = [
+    "api_coverage(method, path, statuses): status codes asserted for an OpenAPI operation",
+]
