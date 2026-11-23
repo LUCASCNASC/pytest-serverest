@@ -62,3 +62,4 @@ def test_spec_documents_core_routes_and_operations() -> None:
         path: set(operations) for path, operations in paths.items()
     }
     assert documented_operations == expected
+    
